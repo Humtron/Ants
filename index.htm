@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Ant Swarm</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+	<link type="text/css" rel="stylesheet" href="/ant/css/sunny/jquery-ui-1.8.22.custom.css" />
+	<link type="text/css" rel="stylesheet" href="/ant/css/main.css?v=4" />
+	<script type="text/javascript" src="/ant/js/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="/ant/js/jquery-ui-1.8.22.custom.min.js"></script>
+	<script type="text/javascript" src="/ant/js/jquery.qtip-1.0.0-rc3.min.js"></script>
+	<script type="text/javascript" src="/ant/js/main.js?v=2"></script>
+</head>
+<body>
+	<div id="container">
+		<div id="Meta" style="float:right">
+			<span id="Score" class="spanLink">Scoreboard</span>
+		</div>
+		<div id="NewGame">
+			<input id="NewGameSubmit" type="button" value="Create new game"> with 
+			<div id="NewPlayers"></div> 
+			players
+		</div>
+
+		<h1>Go east, young ant</h1>
+
+		<div id="Turn">
+			<div class="turnBox" title="The current player"><span id="Player" class="spanGrayLight marginSlim">Nobody</span></div>
+			<div class="turnBox" title="Moves left this turn">Moves: <span id="Moves" class="spanGrayLight marginSlim">0</span></div>
+			<div class="turnBox" title="Upkeep cost for this player">Upkeep: <span id="Upkeep" class="spanRed marginSlim">0</span></div>
+			<div class="turnBox" title="Next yield for this player">Yield: <span id="Yield" class="spanRed marginSlim">0</span></div>
+			<div class="turnBoxRight">
+				<input id="BuyQueens" type="button" value="Queens ++"> 
+				<input id="BuyWorkers" type="button" value="Workers ++"> 
+				<input id="NextPlayer" type="button" value="End turn">
+			</div>
+		</div>
+
+		<div id="Board">
+			<div id="Hills"></div>
+			<div id="Tiles"></div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	<!--
+
+	// helps debug JS
+	//"use strict";
+
+	$(document).ready(function () {
+		// bind DOM controls
+		Ant.DOM.bind();
+		
+		// attach events
+		$("#NewGameSubmit").click(function() {
+			$("#NewGame").css("opacity", "0.3").hover(function () {
+				$(this).css("opacity", "1");
+			}, function () {
+				$(this).css("opacity", "0.1");
+			});
+			Ant.Board.reset();
+			Ant.Board.promptPlayers($("#NewPlayers").slider("value"));
+		});
+		$("#NewPlayers").slider({
+			value: 2,
+			min: 2,
+			max: 5,
+			step: 1,
+			slide: function (event, ui) {
+				// update handle
+				$("a.ui-slider-handle").text(ui.value);
+			}
+		});
+		$("#Score").click(function() {
+			Ant.Board.viewScore();
+		});
+		$("#BuyQueens").click(function() {
+			Ant.Board.buyQueens();
+		});
+		$("#BuyWorkers").click(function() {
+			Ant.Board.buyWorkers();
+		});
+		$("#NextPlayer").click(function() {
+			Ant.Turn.nextPlayer();
+		});
+		
+		// default new players
+		$("#NewPlayers a.ui-slider-handle").text(2);
+	});
+
+	//-->
+	</script> 
+
+</body>
+</html>

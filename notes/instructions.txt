@@ -1,0 +1,58 @@
+--- Jeremy says ---
+
+OK, so I found the rules written out on some notebook paper and a transparency map of the game board.
+
+The game board is actually 9 total areas. There are four "hills" that are separate from the picnic area, and a picnic area that is five areas. I don't think the layout really matters, but it was necessary for each ants to spread across the board using adjacent areas.  Each hill is just a representative storehouse for ants, which players then can move onto the picnic area as they see fit. Hills can also be attacked by warrior ants for a portion of another player's food.
+
+This part I'm adding for clarification, but it was basically done in practice when we played it.
+Each player takes a turn within each phase. A round is when all turns of all phases are complete.
+Phase 1 - Placement
+Phase 2 - Yield
+Phase 3 - Reproduction
+Phase 4 - Specials (random events and attacks)
+
+Each player starts with a Queen, and an ant. The Queen doesn't actually go anywhere, but the ant can be moved on a picnic area (could be closest to the hill, or just anywhere). A dice roll (we used two 6-siders) then determines the relative yield in food of every occupied area. If there's only one ant in that area (as will be the case in the beginning) that player gets all of the food. The first turn will be spent with each player simply placing their ant and collecting the food. At the end of the turn there is a buy phase, in which players can buy another ant using food. (There was a fee table, but I couldn't find it. Something like 2 food = 1 worker, 3 food = 1 warrior, 5 food = 1 Queen) Ants purchased like this will appear in the hill, and must be placed. When the placement phase comes up, players can put ants in any area they currently occupy, or adjacent to one they do.
+
+As the game continues and players buy more workers, they can be spread across the board each turn, adding ants to adjacent picnic areas until they have covered the whole board. Each turn there will be a roll to determine the yield of each area, and the yield is divided evenly among all ants in a given area, with the number rounded down for remainders. Each ant will take at least 1. For instance, If the yellow player and the blue player both have 1 ant by the pond, but the red player has 3, and the food yield is 10, each ant will take 2 home. 2 for the blue player, 2 for the yellow player, and 6 for the red player. Thus, the more ants in an area, the smaller the amount actually harvested.
+
+Finally, before each round there would be some random event. Either a flood in one or two areas and no food was gathered there, or a number of workers in each area died, or a picnic basket was left and the food tripled in that area, or some kid kicked over an ant hill, killing any workers still there....that kind of thing. This is the kind of "randomly" generated world event we were talking about.
+
+We didn't always include this next part. Warriors can be used to attack neighboring hills for food. You must have at least one warrior ant to attack. Warriors defending against warriors cancel one another out. However, if a player is forced to use worker ants still in his hill in order to defend, then the workers will die in the defending. For hills that are left completely unguarded (no workers, no warriors), we played one game in which you could kill the Queen, which would take that player out of the game. The kids didn't like it much, but you know, whatever.
+
+Finally, we played to ten rounds. However, it would take an hour or more to do that with my kids playing in teams of 5. I think the size of the map and the number of rounds played should adjust based on the number of players (if that's possible).
+
+--- Jeremy says ---
+
+Hey, I just finished a test run of the Ants game with my Homeroom. Here's what we discovered.
+
+A linear map definitely works better than a circular map. It creates kind of a rush in the beginning of the game that would be otherwise kind of dull.
+The arrangement we tried was 4 hills on the left side, then five areas to the right, then four, then three, then two, then one, then one as you move from left to right (kind of like a pyramid).
+
+The currency needs to be a little different. For one, ants need to be more expensive, 3 or even 4 food per. 10 food for queens. However, the yield range should be 1 - 20 or something larger than 1 - 12. (1-12 might work better with 3 players...)
+
+The kids liked upkeep only for ants in the field, not the ones still in the hill. We can talk about this one. i'm not opposed to it, but it does give some incentive to keep ants in the hill to defend, should we want to include the whole "warrior ant" idea.
+
+A limit of 3 Queens. I don't remember why this was, but there it is.
+
+We didn't add the random events, the warriors, or the "winter" idea. We just gave the currency system a pretty good run-through.
+
+--- Jeff says ---
+
+Queens function as a multiplier on how many workers are purchased. Players start with 1 worker and 1 queen. When they go to buy workers, they buy them in multiples of their number of queens, but for the same base price as 1 worker. Players with 1 queen may buy workers in groups of 1.  With 2 queens, minimum worker buy is 2, cost is 1 worker. This introduces a delicate balancing act of growth, and allows economy of scale.
+
+Upkeep costs take effect at the beginning of each turn for each player. Upkeep happens regardless of where the worker or queen is. Workers and queens do not have the same upkeep cost... workers are much cheaper.
+
+In the event that upkeep exceeds the current food gathered in the player's hill, ants begin to die. Worker ants die first, starting with those farthest from the hill. Queens die last, and each queen pays down more food debt than a worker.
+
+In the event that all queens have died, the player has permanently lost the game. Their turn will be skipped for the remainder of the game.
+
+
+
+
+
+
+
+
+
+
+

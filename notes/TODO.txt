@@ -1,0 +1,21 @@
+TODO:
+
+Make board round. South tiles can move onto north tiles, and vice versa. This will mean all columns have identical numbers of tiles?
+
+Make yield and upkeep assess immediately after player turn, to prevent nasty surprises.
+
+Randomly eliminate single tiles to create a more dynamic board
+	No tiles from first column
+	No tiles from first tiles in column, or last tile in column
+
+Create a mesh of possible tile positions... and then fill these with active/inactive tiles
+Refigure game board to be random... generated one column at a time... columns unlock every few rounds
+Each tile should understand which tiles are adjacent, and which tiles it can accept moves from
+	For given tile number X in column number Y, adjacent tiles can be determined as:
+		Same column: X +- 1
+		Left column: X - (3 * number of players)
+					 X - (3 * number of players) - 1
+		Rght column: X + (3 * number of players)
+					 X + (3 * number of players) - 1
+
+Test Chrome... allocating workers does not work correctly.

@@ -1,0 +1,330 @@
+/*** html and body tags ***/
+html { height: 100%; }
+body {
+	margin: 0;
+	padding: 0;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	background-color: #DDDDDD;
+}
+
+/*** body container ***/
+#container {
+	/* width: 1000px; (7 wide) */
+	width: 760px;
+	margin: 0 auto;
+}
+
+/*** divs and display ***/
+h1 { margin: 10px 0 20px 0; }
+.hide { display: none; }
+.clear { clear: both; }
+.marginSlim { margin: 5px; }
+.marginBottomSlim { margin-bottom: 15px; }
+.marginBottom { margin-bottom: 20px; }
+.marginLeft { margin-left: 20px; }
+.marginRight { margin-right: 20px; }
+.right { text-align: right; }
+.left { text-align: left; }
+
+/*** tables ***/
+table tr td {
+	padding: 4px;
+}
+table.rowDivider tr td {
+	padding: 6px 3px 10px 3px;
+	border-bottom: 1px dashed #AAAAAA;
+}
+table.rowDivider tr:last-child td {
+	border-bottom: 0;
+	padding-bottom: 0;
+}
+
+/*** buttons ***/
+input[type=button] {
+	background: #FFCC00 url("/ant/images/button.png") repeat-x;
+	border: 2px solid #CCA300;
+	border-radius: 5px;
+	padding: 3px 5px;
+	cursor: pointer;
+	color: #000000;
+	margin: 0 5px;
+}
+input[type=button]:active {
+	background: #CCA300 url("/ant/images/button-active.png") repeat-x;
+}
+
+/*** yeti ***/
+div.yetiBackground {
+	z-index: 8;
+	background-color: #000000;
+	opacity: .80;
+	filter: alpha(opacity=80);
+	width: 100%;
+	height: 100%;
+}
+/* if padding/border width are modified, JS in main.js must also be updated! */
+div.yeti {
+	overflow: auto;
+	z-index: 9;
+	padding: 10px;
+	margin: 0;
+	background: #FFFFFF;
+	box-shadow: 0 0 6px 4px #CCCCCC;
+}
+div.yeti h3 { margin-top: 0; }
+div.yeti input[type=button] { margin: 5px 20px 0 0; }
+div.yetiContent { margin: 8px; }
+
+/*** fields ***/
+ul.form, ul.form li,
+ul.normal, ul.normal li {
+	margin: 0;
+	padding: 0;
+}
+ul.form {
+	float: left;
+	margin-right: 50px;
+}
+ul.form li, ul.normal li {
+	list-style: none outside none;
+	margin-bottom: 3px;
+}
+fieldset {
+	float: left;
+	margin: 0 10px 10px 0;
+	padding: 10px;
+	border-radius: 10px;
+}
+legend {
+	font-weight: bold;
+	color: #666666;
+}
+label {
+	float: left;
+	width: 100px;
+	color: #666666;
+	padding-top: 8px;
+	margin-right: 10px;
+}
+input[type=text] {
+	margin: 3px;
+}
+input {
+	font-size: 15px;
+}
+
+/*** spans that look like <a> links ***/
+.spanLink {
+	cursor: pointer;
+	color: #0066FF;
+	text-decoration: underline;
+}
+.spanLinkColorless {
+	cursor: pointer;
+	text-decoration: underline;
+}
+.spanLink:hover, .spanLinkColorless:hover {
+	cursor: pointer;
+	color: #666666;
+	text-decoration: none;
+}
+
+/*** text ***/
+.spanGreen, .spanRed, .spanGray, .spanGrayLight, .spanYellow {
+	border-radius: 5px;
+	padding: 4px 5px;
+	color: #FFFFFF;
+	font-weight: bold;
+}
+.spanGreen { background: #009900; }
+.spanRed { background: #CC0000; }
+.spanGray { background: #666666; }
+.spanGrayLight { background: #999999; }
+.spanYellow { background: #CCA300; }
+
+/*** board containers ***/
+#NewGame {
+	float: right;
+	margin-right: 50px;
+}
+#NewPlayers {
+	width: 50px;
+	display: inline-block;
+	margin: 0 18px 0 10px;
+}
+#Meta {
+	display: none;
+	float: right;
+	padding-top: 8px;
+}
+#Board, #Turn {
+	display: none;
+	overflow: hidden;
+	border-radius: 10px;
+}
+#Turn {
+	background: #FFFFFF;
+	padding: 10px;
+	margin-bottom: 20px;
+	font-size: 15px;
+	box-shadow: 2px 2px 5px #999999;
+}
+#Hills, #Tiles {
+	float: left;
+}
+#Hills {
+	width: 160px;
+	margin-left: 15px;
+}
+#Tiles {
+	/* width: 785px; (7 wide) */
+	width: 565px;
+	margin-left: 5px;
+}
+
+/*** turn display ***/
+.turnBox {
+	float: left;
+	margin: 7px 10px 0 0;
+}
+.turnBoxRight {
+	float: right;
+}
+#Player, #Moves, #Yield, #Upkeep {
+	font-weight: bold;
+}
+
+/*** board hills and tiles ***/
+.hill {
+	height: 168px;
+	margin: 5px 2px 5px 0;
+	overflow: hidden;
+	background: #FFFFFF url("/ant/images/hill1.jpg") no-repeat;
+	border: 2px solid #999999;
+	border-radius: 5px;
+	box-shadow: 2px 2px 5px #666666;
+	opacity: 0.5;
+}
+.tile {
+	height: 50px;
+	margin: 5px 2px;
+	overflow: hidden;
+	background: #C6D9AF;
+	border: 2px solid #7CA34D;
+	border-radius: 5px;
+	box-shadow: 2px 2px 5px #999999;
+	cursor: pointer;
+}
+.tileCol {
+	float: left;
+	width: 112px;
+}
+.tileActive {
+	background: #FFFFFF;
+}
+.hillActive {
+	opacity: 1;
+}
+.hillInactive {
+	background: #BBBBBB;
+	box-shadow: none;
+}
+.hillDrop, .tileDrop {
+	background: #FFCC00;
+}
+.hillText, .tileText {
+	padding: 5px;
+}
+.hillText {
+	color: #666666;
+}
+.hillActive .hillText {
+	color: #333333;	
+}
+.hillInactive .hillText {
+	color: #666666;	
+}
+.tileText {
+	border: 2px solid #9AC775;
+	color: #333333;
+	height: 36px;
+}
+.hillName {
+	padding: 5px;
+	border-radius: 5px;
+	height: 22px;
+}
+.hillName, .tileFood {
+	overflow: hidden;
+	font: bold 18px Arial, Helvetica, sans-serif;
+}
+.hillFood, .hillQueens, .hillWorkers {
+	margin: 5px 10px;
+	padding: 5px;
+	border-radius: 5px;
+	width: 80px;
+}
+.hillName, .hillFood, .hillQueens, .hillWorkers {
+	background: none repeat scroll 0 0 rgba(255, 255, 255, 0.7);
+}
+.hillInactive .hillName, .hillInactive .hillFood,
+.hillInactive .hillQueens, .hillInactive .hillWorkers {
+	background: none;
+}
+.hillFood {
+	font: bold 20px Arial, Helvetica, sans-serif;
+}
+.hillQueens, .hillWorkers {
+	font: bold 18px Arial, Helvetica, sans-serif;
+}
+.tileFood {
+	height: 20px;
+	font-size: 20px;
+	line-height: 16px;
+}
+.tileAnts {
+	margin: 0 0 0 8px;
+	font: bold 16px Arial, Helvetica, sans-serif;
+}
+.tileActive .tileText {
+	border-color: #FFFFFF;
+}
+
+/*** icons ***/
+.iconFoodBlack, .iconFood {
+	display: inline-block;
+	height: 15px;
+	width: 16px;	
+}
+.iconFoodBlack {
+	background-image: url("/ant/images/cake-black.png");
+}
+.iconFood {
+	background-image: url("/ant/images/cake.png");
+}
+
+.iconAntBlack, .iconAnt, .iconQueenBlack, .iconQueen {
+	display: inline-block;
+	height: 12px;
+	width: 28px;
+}
+.iconAntBlack {
+	background-image: url("/ant/images/ant-black.png");
+}
+.iconAnt {
+	background-image: url("/ant/images/ant-gold.png");
+	cursor: move;
+}
+.iconQueenBlack {
+	background-image: url("/ant/images/ant-black.png");
+}
+.iconQueen {
+	background-image: url("/ant/images/ant-queen.png");
+}
+
+/*** jQuery ***/
+a.ui-slider-handle {
+	text-decoration: none;
+	text-align: center;
+}
