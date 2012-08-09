@@ -42,7 +42,7 @@ table.rowDivider tr:last-child td {
 
 /*** buttons ***/
 input[type=button] {
-	background: #FFCC00 url("/ant/images/button.png") repeat-x;
+	background: #FFCC00 url("../images/button.png") repeat-x;
 	border: 2px solid #CCA300;
 	border-radius: 5px;
 	padding: 3px 5px;
@@ -51,7 +51,7 @@ input[type=button] {
 	margin: 0 5px;
 }
 input[type=button]:active {
-	background: #CCA300 url("/ant/images/button-active.png") repeat-x;
+	background: #CCA300 url("../images/button-active.png") repeat-x;
 }
 
 /*** yeti ***/
@@ -200,7 +200,7 @@ input {
 	height: 168px;
 	margin: 5px 2px 5px 0;
 	overflow: hidden;
-	background: #FFFFFF url("/ant/images/hill1.jpg") no-repeat;
+	background: #FFFFFF url("../images/hill1.jpg") no-repeat;
 	border: 2px solid #999999;
 	border-radius: 5px;
 	box-shadow: 2px 2px 5px #666666;
@@ -298,10 +298,10 @@ input {
 	width: 16px;	
 }
 .iconFoodBlack {
-	background-image: url("/ant/images/cake-black.png");
+	background-image: url("../images/cake-black.png");
 }
 .iconFood {
-	background-image: url("/ant/images/cake.png");
+	background-image: url("../images/cake.png");
 }
 
 .iconAntBlack, .iconAnt, .iconQueenBlack, .iconQueen {
@@ -310,17 +310,17 @@ input {
 	width: 28px;
 }
 .iconAntBlack {
-	background-image: url("/ant/images/ant-black.png");
+	background-image: url("../images/ant-black.png");
 }
 .iconAnt {
-	background-image: url("/ant/images/ant-gold.png");
+	background-image: url("../images/ant-gold.png");
 	cursor: move;
 }
 .iconQueenBlack {
-	background-image: url("/ant/images/ant-black.png");
+	background-image: url("../images/ant-black.png");
 }
 .iconQueen {
-	background-image: url("/ant/images/ant-queen.png");
+	background-image: url("../images/ant-queen.png");
 }
 
 /*** jQuery ***/

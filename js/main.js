@@ -77,7 +77,7 @@ var Ant = {
 			upkeep: {
 				next: 0
 			}
-		}
+		};
 	},
 	Hill: function (hill) {
 		// DOM binding object, binder, local bindings
@@ -187,7 +187,7 @@ var Ant = {
 				domDragWorker.hide();
 				domIconWorker.show();
 			}
-		}
+		};
 
 		return {
 			type: "hill",
@@ -341,7 +341,7 @@ var Ant = {
 				domIconFood.hide();
 				domIconFoodInactive.show();
 			}
-		}
+		};
 
 		return {
 			type: "tile",
