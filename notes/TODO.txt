@@ -18,4 +18,4 @@ Each tile should understand which tiles are adjacent, and which tiles it can acc
 		Rght column: X + (3 * number of players)
 					 X + (3 * number of players) - 1
 
-Test Chrome... allocating workers does not work correctly.
+Debug Chrome on Chris' PC. Something is different.
