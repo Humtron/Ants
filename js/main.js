@@ -12,18 +12,6 @@ var Ant = {
 		move: 0
 	},
 	Settings: {
-		qtip: {
-			style: {
-				name: "cream",
-				tip: "bottomMiddle"
-			},
-			position: {
-				corner: {
-					target: "topMiddle",
-					tooltip: "bottomMiddle"
-				}
-			}
-		},
 		board: {
 			// how many tile columns
 			tileColumns: 5,
@@ -376,9 +364,30 @@ Ant.DOM.bind = function () {
 };
 
 Ant.DOM.bindQtip = function () {
-	// TODO: qtip is retarded and produces an extra title on div.turnBox for no reason
-	//$("div[title]").qtip(Ant.Settings.qtip);
-	//$("li[title]").qtip(Ant.Settings.qtip);
+	var settings = {
+		style: {
+			name: "cream",
+			tip: "bottomMiddle"
+		},
+		position: {
+			corner: {
+				target: "topMiddle",
+				tooltip: "bottomMiddle"
+			}
+		}
+	};
+
+	// only make new qtips where necessary,
+	// because qtip get confused when bound more
+	// than once to an element, and $(el).qtip("destroy")
+	// will throw an error if qtip does not exist already
+	$("div[title], li[title]").each(function () {
+		var that = $(this);
+
+		if (!that.data("qtip")) {
+			that.qtip(settings);
+		}
+	});
 };
 
 Ant.Board.reset = function () {
@@ -655,7 +664,7 @@ Ant.Board.createTile = function (id, col) {
 							}),
 							Util.el("div", {
 								attr: [
-									["title", "Cake. Requires doing science."],
+									["title", "Cake. Delicious. Mysterious."],
 									["class", "iconFoodBlack"]
 								]
 							})
@@ -1499,19 +1508,20 @@ var Util = {
 	},
 	// lightweight DOM element creation
 	el: function (tag, data) {
-		var element = document.createElement(tag), eventData = {};
+		var element = document.createElement(tag), eventData = {},
+			i = 0;
 
 		if (data) {
 			// set all attributes
 			if (data.attr && data.attr.length) {
-				for (var i = 0; i < data.attr.length; i++) {
+				for (i = 0; i < data.attr.length; i++) {
 					element.setAttribute(data.attr[i][0], data.attr[i][1]);
 				}
 			}
 	
 			// bind all events
 			if (data.events && data.events.length) {
-				for (var i = 0; i < data.events.length; i++) {
+				for (i = 0; i < data.events.length; i++) {
 					// data to be passed in event.data, if data exists
 					if (data.events[i][2]) eventData = data.events[i][2];
 	
@@ -1522,7 +1532,7 @@ var Util = {
 	
 			// append all children
 			if (data.children && data.children.length) {
-				for (var i = 0; i < data.children.length; i++) {
+				for (i = 0; i < data.children.length; i++) {
 					// objects are appended directly, all other types become text nodes
 					if (typeof data.children[i] == "object") {
 						element.appendChild(data.children[i]);
@@ -1545,7 +1555,7 @@ var Util = {
 		var result = data.replace(/[^0-9]/g, "");
 
 		// must be numbers only
-		if (result != "") {
+		if (result !== "") {
 			result = parseInt(result, 10);
 		} else {
 			result = 0;
