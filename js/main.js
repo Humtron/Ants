@@ -1270,12 +1270,6 @@ Ant.Turn.nextPlayer = function () {
 
 	// find next active player
 	while (!foundActive) {
-		// if no active players, return to prevent infinite loop
-		if (last === next) {
-			alert("Preventing infinite loop... could not find an active player");
-			return false;
-		}
-
 		// check if next should be first player in next round
 		if (next >= Ant.Board.players.length) {
 			next = 0;
@@ -1287,6 +1281,11 @@ Ant.Turn.nextPlayer = function () {
 		if (player.active()) {
 			foundActive = true;
 		} else {
+			// if no active players, return to prevent infinite loop
+			if (last === next) {
+				return false;
+			}
+
 			next++;
 		}
 	}
