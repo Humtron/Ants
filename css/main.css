@@ -191,7 +191,7 @@ input {
 .turnBoxRight {
 	float: right;
 }
-#Player, #Moves, #Yeeld, #Upkeep {
+#Player, #Moves, #Yielde, #Upkeep {
 	font-weight: bold;
 }
 

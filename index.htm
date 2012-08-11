@@ -27,8 +27,8 @@
 		<div id="Turn">
 			<div class="turnBox" title="The current player"><span id="Player" class="spanGrayLight marginSlim">Nobody</span></div>
 			<div class="turnBox" title="Moves left this turn">Moves: <span id="Moves" class="spanGrayLight marginSlim">0</span></div>
+			<div class="turnBox" title="Next yield for this player">Yield: <span id="Yielde" class="spanRed marginSlim">0</span></div>
 			<div class="turnBox" title="Upkeep cost for this player">Upkeep: <span id="Upkeep" class="spanRed marginSlim">0</span></div>
-			<div class="turnBox" title="Next yield for this player">Yield: <span id="Yeeld" class="spanRed marginSlim">0</span></div>
 			<div class="turnBoxRight">
 				<input id="BuyQueens" type="button" value="Queens ++"> 
 				<input id="BuyWorkers" type="button" value="Workers ++"> 
@@ -63,7 +63,7 @@
 			Ant.Board.promptPlayers($("#NewPlayers").slider("value"));
 		});
 		$("#NewPlayers").slider({
-			value: 2,
+			value: 3,
 			min: 2,
 			max: 5,
 			step: 1,

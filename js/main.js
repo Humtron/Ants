@@ -58,7 +58,7 @@ var Ant = {
 			id: player.id,
 			name: player.name,
 			active: active,
-			yeeld: {
+			yielde: {
 				last: 0,
 				next: 0
 			},
@@ -74,7 +74,7 @@ var Ant = {
 			domIconFood, domIconFoodInactive, domIconQueen, domIconQueenInactive,
 			domQueens, domWorkers, domFood,
 			// get/set functions to manage both JS and DOM values
-			active, food, queens, workers, yeeld, markActive,
+			active, food, queens, workers, yielde, markActive,
 			// private values (with defaults)
 			id = hill.id,
 			_active = true,
@@ -150,7 +150,7 @@ var Ant = {
 		};
 		
 		// placeholder
-		yeeld = function () {
+		yielde = function () {
 			return 0;
 		};
 
@@ -191,7 +191,7 @@ var Ant = {
 			food: food,
 			queens: queens,
 			workers: workers,
-			yeeld: yeeld,
+			yielde: yielde,
 			markActive: markActive
 		};
 	},
@@ -201,7 +201,7 @@ var Ant = {
 			domTile, domDragWorker, domIconWorker, domIconFood, domIconFoodInactive,
 			domFood, domAnts,
 			// get/set functions to manage both JS and DOM values
-			active, food, workers, yeeld, markActive,
+			active, food, workers, yielde, markActive,
 			// private values (with defaults)
 			id = tile.id,
 			_active = true,
@@ -291,7 +291,7 @@ var Ant = {
 		};
 
 		// get yield for a player
-		yeeld = function (player, options) {
+		yielde = function (player, options) {
 			var playerYield = 0,
 				playerWorkers = workers(null, player),
 				allWorkers = workers();
@@ -344,7 +344,7 @@ var Ant = {
 			active: active,
 			food: food,
 			workers: workers,
-			yeeld: yeeld,
+			yielde: yielde,
 			markActive: markActive
 		};
 	}
@@ -357,7 +357,7 @@ Ant.DOM.bind = function () {
 	Ant.DOM.Player = $("#Player");
 	Ant.DOM.Moves = $("#Moves");
 	Ant.DOM.Upkeep = $("#Upkeep");
-	Ant.DOM.Yeeld = $("#Yeeld");
+	Ant.DOM.Yielde = $("#Yielde");
 	Ant.DOM.Board = $("#Board");
 	Ant.DOM.Hills = $("#Hills");
 	Ant.DOM.Tiles = $("#Tiles");
@@ -921,7 +921,7 @@ Ant.Board.moveWorkers = function (draggable, droppable) {
 		to, toID = Util.cleanNumber(droppable.attr("data-id")),
 		toWorkers = 0,
 		toOldYield = 0, toNewYield = 0,
-		yeeld = 0;
+		yielde = 0;
 
 	// find source
 	// calls to workers() method will overload with player,
@@ -967,13 +967,13 @@ Ant.Board.moveWorkers = function (draggable, droppable) {
 	}
 
 	// calculate old and new yields on both from and to
-	fromOldYield = from.yeeld(Ant.Turn.player);
-	fromNewYield = from.yeeld(Ant.Turn.player, { workers: (fromWorkers - 1) });
-	toOldYield = to.yeeld(Ant.Turn.player);
-	toNewYield = to.yeeld(Ant.Turn.player, { workers: (toWorkers + 1) });
+	fromOldYield = from.yielde(Ant.Turn.player);
+	fromNewYield = from.yielde(Ant.Turn.player, { workers: (fromWorkers - 1) });
+	toOldYield = to.yielde(Ant.Turn.player);
+	toNewYield = to.yielde(Ant.Turn.player, { workers: (toWorkers + 1) });
 
 	// calculate potential yield change
-	yeeld = (toNewYield - toOldYield) + (fromNewYield - fromOldYield);
+	yielde = (toNewYield - toOldYield) + (fromNewYield - fromOldYield);
 
 	Util.yetiDelete();
 	Util.yetiAdd("<h3>How many workers should swarm?</h3>" +
@@ -983,7 +983,7 @@ Ant.Board.moveWorkers = function (draggable, droppable) {
 		"<span id='PlayerLeft' class='spanGray'>" + (fromWorkers - 1) + "</span> " +
 		"<span id='PlayerLeftPlural'>" + fromWorkersPlural + "</span> will stay behind.&nbsp;&nbsp;" +
 		"Your yield will change by " +
-		"<span id='PlayerYield' class='" + ((yeeld > 0) ? "spanGreen" : "spanRed") + "'>" + yeeld + "</span> food.<br><br>" +
+		"<span id='PlayerYield' class='" + ((yielde > 0) ? "spanGreen" : "spanRed") + "'>" + yielde + "</span> food.<br><br>" +
 		"<input id='PlayerSubmit' type='button' value='Swarm workers'>" +
 		"<span id='PlayerCancel' class='spanLink'>Cancel</span>"
 	);
@@ -998,7 +998,7 @@ Ant.Board.moveWorkers = function (draggable, droppable) {
 				fromOldYield = 0, fromNewYield = 0,
 				toWorkers = to.workers(null, Ant.Turn.player),
 				toOldYield = 0, toNewYield = 0,
-				yeeld = 0;
+				yielde = 0;
 
 			$("#PlayerWorkers").text(ui.value);
 			$("#PlayerWorkersPlural").text((ui.value === 1) ? "worker" : "workers");
@@ -1006,15 +1006,15 @@ Ant.Board.moveWorkers = function (draggable, droppable) {
 			$("#PlayerLeftPlural").text(((fromWorkers - ui.value) === 1) ? "worker" : "workers");
 
 			// calculate old and new yields on both from and to
-			fromOldYield = from.yeeld(Ant.Turn.player);
-			fromNewYield = from.yeeld(Ant.Turn.player, { workers: (fromWorkers - ui.value) });
-			toOldYield = to.yeeld(Ant.Turn.player);
-			toNewYield = to.yeeld(Ant.Turn.player, { workers: (toWorkers + ui.value) });
+			fromOldYield = from.yielde(Ant.Turn.player);
+			fromNewYield = from.yielde(Ant.Turn.player, { workers: (fromWorkers - ui.value) });
+			toOldYield = to.yielde(Ant.Turn.player);
+			toNewYield = to.yielde(Ant.Turn.player, { workers: (toWorkers + ui.value) });
 		
 			// calculate potential yield change
-			yeeld = (toNewYield - toOldYield) + (fromNewYield - fromOldYield);
+			yielde = (toNewYield - toOldYield) + (fromNewYield - fromOldYield);
 
-			$("#PlayerYield").removeClass().addClass((yeeld > 0) ? "spanGreen" : "spanRed").text(yeeld);
+			$("#PlayerYield").removeClass().addClass((yielde > 0) ? "spanGreen" : "spanRed").text(yielde);
 		}
 	});
 	$("#PlayerSubmit").click(function () {
@@ -1039,23 +1039,23 @@ Ant.Board.moveWorkers = function (draggable, droppable) {
 };
 
 Ant.Board.updateYield = function (player) {
-	var yeeld = 0;
+	var yielde = 0;
 
 	// calculate player yield from each tile
 	for (var i = 0; i < Ant.Board.tiles.length; i++) {
-		yeeld += Ant.Board.tiles[i].yeeld(player);
+		yielde += Ant.Board.tiles[i].yielde(player);
 	}
 
-	Ant.Board.players[player].yeeld.next = yeeld;
+	Ant.Board.players[player].yielde.next = yielde;
 
 	// update board if current player
 	if (player === Ant.Turn.player) {
-		Ant.DOM.Yeeld.text(yeeld);
+		Ant.DOM.Yielde.text(yielde);
 
-		if (yeeld > 0) {
-			Ant.DOM.Yeeld.removeClass("spanRed").addClass("spanGreen");
+		if (yielde > 0) {
+			Ant.DOM.Yielde.removeClass("spanRed").addClass("spanGreen");
 		} else {
-			Ant.DOM.Yeeld.removeClass("spanGreen").addClass("spanRed");
+			Ant.DOM.Yielde.removeClass("spanGreen").addClass("spanRed");
 		}
 	}
 };
@@ -1116,7 +1116,7 @@ Ant.Board.viewTile = function (tile) {
 							children: [
 								Util.el("span", {
 									attr: [["class", "spanGreen marginSlim"]],
-									children: [t.yeeld(i)]
+									children: [t.yielde(i)]
 								}),
 								" yield"
 							]
@@ -1182,8 +1182,8 @@ Ant.Board.viewScore = function () {
 						attr: [["class", "right"]],
 						children: [
 							Util.el("span", {
-								attr: [["class", ((player.yeeld.last > 0) ? "spanGreen" : "spanRed") + " marginSlim"]],
-								children: [player.yeeld.last]
+								attr: [["class", ((player.yielde.last > 0) ? "spanGreen" : "spanRed") + " marginSlim"]],
+								children: [player.yielde.last]
 							}),
 							" last yield"
 						]
@@ -1192,8 +1192,8 @@ Ant.Board.viewScore = function () {
 						attr: [["class", "right"]],
 						children: [
 							Util.el("span", {
-								attr: [["class", ((player.yeeld.next > 0) ? "spanGreen" : "spanRed") + " marginSlim"]],
-								children: [player.yeeld.next]
+								attr: [["class", ((player.yielde.next > 0) ? "spanGreen" : "spanRed") + " marginSlim"]],
+								children: [player.yielde.next]
 							}),
 							" next yield"
 						]
@@ -1272,6 +1272,7 @@ Ant.Turn.nextPlayer = function () {
 	while (!foundActive) {
 		// if no active players, return to prevent infinite loop
 		if (last === next) {
+			alert("Preventing infinite loop... could not find an active player");
 			return false;
 		}
 
@@ -1338,7 +1339,7 @@ Ant.Turn.updatePlayer = function () {
 
 Ant.Turn.doUpkeep = function() {
 	var food = Ant.Board.hills[Ant.Turn.player].food,
-		yeeld = Ant.Board.players[Ant.Turn.player].yeeld.last,
+		yielde = Ant.Board.players[Ant.Turn.player].yielde.last,
 		upkeep = Ant.Board.players[Ant.Turn.player].upkeep.next,
 		hill = Ant.Board.hills[Ant.Turn.player], tile,
 		workers, i = 0,
@@ -1414,9 +1415,9 @@ Ant.Turn.doUpkeep = function() {
 		}
 
 		Util.yetiDelete();
-		Util.yetiAdd("<h3>Starvation occurred.</h3>" +
-			"<i>Your hill had " + (food() - yeeld) + "</span> food.&nbsp;&nbsp;" +
-			"You gained " + yeeld + " yield and owed " + upkeep + " upkeep.</i><br><br>" +
+		Util.yetiAdd("<h3>Starvation occurred for " + Ant.Board.players[Ant.Turn.player].name + ".</h3>" +
+			"<i>Your hill had " + (food() - yielde) + "</span> food.&nbsp;&nbsp;" +
+			"You gained " + yielde + " yield and owed " + upkeep + " upkeep.</i><br><br>" +
 			"You have " +
 			"<span class='" + ((foodLeft > 0) ? "spanGreen" : "spanRed") + " marginSlim'>" + 
 			((foodLeft > 0) ? foodLeft : 0) + "</span> food remaining.<br><br>" +
@@ -1465,13 +1466,13 @@ Ant.Turn.doUpkeep = function() {
 
 Ant.Turn.doYield = function() {
 	var food = Ant.Board.hills[Ant.Turn.player].food,
-		yeeld = Ant.Board.players[Ant.Turn.player].yeeld.next;
+		yielde = Ant.Board.players[Ant.Turn.player].yielde.next;
 
 	// add yield to hill food
-	food(food() + yeeld);
+	food(food() + yielde);
 
 	// save yield as last
-	Ant.Board.players[Ant.Turn.player].yeeld.last = yeeld;
+	Ant.Board.players[Ant.Turn.player].yielde.last = yielde;
 };
 
 Ant.Turn.gameOver = function () {
