@@ -16,8 +16,11 @@ var Ant = {
 			// how many tile columns
 			tileColumns: 5,
 			// how many tiles to offset odd columns
-			//	... and how many less tiles odd columns will have
+			// and how many less tiles odd columns will have
 			tileOffset: 1,
+			// how many tiles to hide, to increase
+			// board randomness
+			tilesHidden: 5,
 			// how many moves per turn by a player
 			movesPerTurn: 1
 		},
@@ -35,11 +38,11 @@ var Ant = {
 		},
 		food: {
 			// at least this much food in each tile
-			min: 6,
+			min: 7,
 			// random range of food in each tile
-			range: 12,
+			range: 15,
 			// weight of tile placement (more distant columns should have more food)
-			weight: 0.5
+			weight: 0.6
 		}
 	},
 	Player: function (player) {
@@ -239,6 +242,8 @@ var Ant = {
 				// hides tile without affecting layout
 				if (!_active) {
 					domTile.css("visibility", "hidden");
+				} else {
+					domTile.css("visibility", "visible");
 				}
 			}
 			return _active;
@@ -300,7 +305,7 @@ var Ant = {
 				// allow potential yield calculations via options object
 				if (Util.getType(options) === "object") {
 					// overwrite playerWorkers with theoretical worker number
-					//	... and allWorkers with difference
+					// and allWorkers with difference
 					if (Util.getType(options.workers) === "number") {
 						allWorkers += options.workers - playerWorkers;
 						playerWorkers = options.workers;
@@ -310,12 +315,12 @@ var Ant = {
 				// check if player even has workers here
 				if (playerWorkers > 0) {
 					// yield is the percentage of this player's workers
-					//	... measured against all workers in the tile
-					//	... multiplied against the total food in the tile
+					// measured against all workers in the tile
+					// multiplied against the total food in the tile
 					playerYield = Math.floor((playerWorkers / allWorkers) * food());
 
 					// if workers take home less than 1 food each, 
-					//	... force minimum food per worker to 1 food
+					// force minimum food per worker to 1 food
 					if (playerYield === 0) { playerYield = playerWorkers; }
 				}
 			}
@@ -629,7 +634,7 @@ Ant.Board.createHill = function (id) {
 };
 
 Ant.Board.createTile = function (id, col) {
-	// random food weighted by tile position
+	// random food weighted by tile's column
 	var food = Ant.Settings.food.min + 
 		Math.floor((Math.random() * Ant.Settings.food.range) + (col * Ant.Settings.food.weight));
 
@@ -702,6 +707,7 @@ Ant.Board.createTile = function (id, col) {
 
 Ant.Board.create = function () {
 	var tiles = [],
+		hidden = [],
 		// 3 tiles per player hill
 		numTiles = 3 * Ant.Board.players.length,
 		offset = 0,
@@ -740,11 +746,29 @@ Ant.Board.create = function () {
 		);
 	}
 
+	// hide single tiles to create random board
+	if (Ant.Settings.board.tilesHidden > 0) {
+		for (var i = 0; i < Ant.Settings.board.tilesHidden; i++) {
+			// exclude any tiles in first column by setting min to numTiles
+			hidden.push(numTiles + Math.floor(Math.random() * (Ant.Board.tiles.length - numTiles)));
+		}
+	
+	}
+
+console.info("Hidden tiles: ", hidden);
+
 	// bind all tiles and set default display
 	for (i = 0; i < Ant.Board.tiles.length; i++) {
 		Ant.Board.tiles[i].bind();
 		Ant.Board.tiles[i].markActive(false);
 		Ant.Board.tiles[i].DOM.dragWorker().hide();
+		
+		// hide any tiles in hidden array
+		for (var j = 0; j < hidden.length; j++) {
+			if (i === hidden[j]) {
+				Ant.Board.tiles[i].active(false);
+			}
+		}
 	}
 
 	// bind all draggables and droppables for moving ants
@@ -755,7 +779,7 @@ Ant.Board.create = function () {
 		snapMode: "inner",
 		snapTolerance: 10,
 		// clones and appends to body to allow draggable to move outside
-		//	... without slipping behind the containing div
+		// without slipping behind the containing div
 		helper: function () {
 			return $(this).clone().appendTo("body").css("zIndex", 10).show();
 		}
@@ -942,11 +966,14 @@ Ant.Board.moveWorkers = function (draggable, droppable) {
 	fromWorkersPlural = ((fromWorkers - 1) === 1) ? " worker" : " workers";
 	toWorkers = to.workers(null, Ant.Turn.player);
 
-	// abort if draggable === droppable, or both are hills, or "to" hill is not this player,
+	// abort if draggable === droppable, or both are hills,
+	// or "to" hill is not this player,
+	// or "to" tile is not active,
 	// or not enough workers in "from"
 	if ((from.type === to.type && from.id === to.id) ||
 		(from.type === "hill" && to.type === "hill") ||
 		(to.type === "hill" && to.id !== Ant.Turn.player) ||
+		(to.type === "tile" && to.active() === false) ||
 		(fromWorkers < 1)) {
 		return false;
 	}
@@ -1265,6 +1292,12 @@ Ant.Turn.nextPlayer = function () {
 		foundActive = false,
 		nextRound = false;
 
+	// if not first turn, assess yield, then upkeep
+	if (Ant.Turn.round > 0) {
+		Ant.Turn.doYield();
+		Ant.Turn.doUpkeep();
+	}
+
 	// update previous player's hill to inactive
 	Ant.Board.hills[last].markActive(false);
 
@@ -1294,12 +1327,6 @@ Ant.Turn.nextPlayer = function () {
 	Ant.Turn.updatePlayer();
 
 	if (nextRound) { Ant.Turn.nextRound(); }
-
-	// if not first turn, assess yield, then upkeep
-	if (Ant.Turn.round > 1) {
-		Ant.Turn.doYield();
-		Ant.Turn.doUpkeep();
-	}
 };
 
 Ant.Turn.nextRound = function () {
@@ -1337,10 +1364,11 @@ Ant.Turn.updatePlayer = function () {
 };
 
 Ant.Turn.doUpkeep = function() {
-	var food = Ant.Board.hills[Ant.Turn.player].food,
-		yielde = Ant.Board.players[Ant.Turn.player].yielde.last,
-		upkeep = Ant.Board.players[Ant.Turn.player].upkeep.next,
-		hill = Ant.Board.hills[Ant.Turn.player], tile,
+	var player = Ant.Turn.player,
+		food = Ant.Board.hills[player].food,
+		yielde = Ant.Board.players[player].yielde.last,
+		upkeep = Ant.Board.players[player].upkeep.next,
+		hill = Ant.Board.hills[player], tile,
 		workers, i = 0,
 		foodLeft = 0, deficit = 0,
 		workersStarved = 0, queensStarved = 0;
@@ -1358,7 +1386,7 @@ Ant.Turn.doUpkeep = function() {
 			// starve workers, beginning in farthest tiles from hill
 			while (deficit < 0 && i >= 0) {
 				tile = Ant.Board.tiles[i];
-				workers = tile.workers(null, Ant.Turn.player);
+				workers = tile.workers(null, player);
 
 //console.warn("Starvation. Analyzing tile: ", i, " with workers: ", workers);
 
@@ -1366,9 +1394,9 @@ Ant.Turn.doUpkeep = function() {
 				if (workers > 0) {
 					while (deficit < 0 && workers > 0) {
 						// workers starve one by one
-						tile.workers((workers - 1), Ant.Turn.player);
+						tile.workers((workers - 1), player);
 						deficit += Ant.Settings.ants.workerUpkeep;
-						workers = tile.workers(null, Ant.Turn.player);
+						workers = tile.workers(null, player);
 						workersStarved++;
 
 //console.warn("Starvation. 1 worker starved in tile: ", i, ", and deficit is now ", deficit);
@@ -1409,12 +1437,12 @@ Ant.Turn.doUpkeep = function() {
 //console.warn("Starvation complete. Workers starved: ", workersStarved, ", and queens starved: ", queensStarved);
 
 			// calculate new yield and upkeep, due to worker starvation
-			Ant.Board.updateYield(Ant.Turn.player);
-			Ant.Board.updateUpkeep(Ant.Turn.player);
+			Ant.Board.updateYield(player);
+			Ant.Board.updateUpkeep(player);
 		}
 
 		Util.yetiDelete();
-		Util.yetiAdd("<h3>Starvation occurred for " + Ant.Board.players[Ant.Turn.player].name + ".</h3>" +
+		Util.yetiAdd("<h3>Starvation occurred for " + Ant.Board.players[player].name + ".</h3>" +
 			"<i>Your hill had " + (food() - yielde) + "</span> food.&nbsp;&nbsp;" +
 			"You gained " + yielde + " yield and owed " + upkeep + " upkeep.</i><br><br>" +
 			"You have " +
@@ -1426,7 +1454,7 @@ Ant.Turn.doUpkeep = function() {
 		);
 
 		// if no queens left alive, prevent default click on yetiBackground
-		// from closing yeti... close must go through PlayerSubmit
+		// from closing yeti: close must go through PlayerSubmit
 		if (hill.queens() === 0) {
 			$("div.yetiBackground").off("click");
 		}
@@ -1451,7 +1479,7 @@ Ant.Turn.doUpkeep = function() {
 			Util.yetiDelete();
 
 			// if no queens left alive, checkmate
-			if (hill.queens() === 0) { Ant.Turn.gameOver(); }
+			if (hill.queens() === 0) { Ant.Turn.gameOver(player); }
 		});
 	}
 
@@ -1474,10 +1502,10 @@ Ant.Turn.doYield = function() {
 	Ant.Board.players[Ant.Turn.player].yielde.last = yielde;
 };
 
-Ant.Turn.gameOver = function () {
+Ant.Turn.gameOver = function (player) {
 	// mark player and hill inactive
-	Ant.Board.players[Ant.Turn.player].active(false);
-	Ant.Board.hills[Ant.Turn.player].active(false);
+	Ant.Board.players[player].active(false);
+	Ant.Board.hills[player].active(false);
 
 	Util.yetiDelete();
 	Util.yetiAdd("<h3>You lost.</h3>" +
@@ -1489,12 +1517,11 @@ Ant.Turn.gameOver = function () {
 	);
 
 	// prevent default click on yetiBackground
-	// from closing yeti... close must go through PlayerSubmit
+	// from closing yeti: close must go through PlayerSubmit
 	$("div.yetiBackground").off("click");
 
 	$("#PlayerSubmit").click(function () {
 		Util.yetiDelete();
-		Ant.Turn.nextPlayer();
 	});
 };
 
