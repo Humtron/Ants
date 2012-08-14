@@ -4,7 +4,9 @@ var Ant = {
 		// arrays of board objects
 		players: [],
 		hills: [],
-		tiles: []
+		tiles: [],
+		// start and end indices for each tile column
+		tileColumnIDs: []
 	},
 	Turn: {
 		round: 0,
@@ -20,7 +22,7 @@ var Ant = {
 			tileOffset: 1,
 			// how many tiles to hide, to increase
 			// board randomness
-			tilesHidden: 5,
+			tilesHidden: 6,
 			// how many moves per turn by a player
 			movesPerTurn: 1
 		},
@@ -401,6 +403,7 @@ Ant.Board.reset = function () {
 	Ant.Board.players = [];
 	Ant.Board.hills = [];
 	Ant.Board.tiles = [];
+	Ant.Board.tileColumnIDs = [];
 
 	Ant.DOM.Hills.empty();
 	Ant.DOM.Tiles.empty();
@@ -705,14 +708,79 @@ Ant.Board.createTile = function (id, col) {
 	});
 };
 
+Ant.Board.createRandomTiles = function(numTiles) {
+	// indices of tiles to hide
+	var hidden = [],
+		// distribution of hidden tiles across columns
+		dist = [],
+		ids = Ant.Board.tileColumnIDs,
+		i = 0, j = 0;
+
+/*
+For 4 random cols and N hidden tiles:
+3: 1, 1, 1, 0
+4: 1, 1, 1, 1
+5: 2, 1, 1, 1
+6: 2, 2, 1, 1
+*/
+
+	// fill distribution array
+	for (i = 0; i < Ant.Settings.board.tileColumns; i++) {
+		dist.push(0);
+	}
+
+	// distribute hidden tiles across columns:
+	// iterate over cols from right to left (decrement),
+	// allocating 1 hidden per col, until 0 hiddens remain
+	i = Ant.Settings.board.tileColumns;
+	j = Ant.Settings.board.tilesHidden;
+	while (j > 0) {
+		i--;
+
+		// ignore first column, and set back to last column
+		if (i === 0) { i = Ant.Settings.board.tileColumns - 1; }
+
+		dist[i] = dist[i] + 1;
+
+		j--;
+	}
+
+	// assign random hiddens according to distribution array
+	for (i = 0; i < dist.length; i++) {
+		j = dist[i];
+
+//console.info("Allocating for col " + i + "...");
+
+		// allocate all hidden tiles for this column
+		while (j > 0) {
+			hidden.push(ids[i].first + Math.floor(Math.random() * (ids[i].last - ids[i].first)));
+
+//console.info(hidden);
+
+			j--;
+		}
+	}
+
+//console.info("Tile distribution: ", dist);
+
+	// hide any tiles in hidden array
+	for (i = 0; i < hidden.length; i++) {
+		Ant.Board.tiles[hidden[i]].active(false);
+	}
+};
+
+Ant.Board.createFog = function () {
+	// create fog to cover all of tile columns except first column
+
+};
+
 Ant.Board.create = function () {
 	var tiles = [],
-		hidden = [],
 		// 3 tiles per player hill
 		numTiles = 3 * Ant.Board.players.length,
 		offset = 0,
 		id = 0,
-		i = 0;
+		i = 0, j = 0;
 
 	// create player hills
 	for (i = 0; i < Ant.Board.players.length; i++) {
@@ -729,10 +797,19 @@ Ant.Board.create = function () {
 		// modulus determines if odd column, and therefore needs offset
 		offset = (i % 2 !== 0) ? Ant.Settings.board.tileOffset : 0;
 
-		for (var j = 0; j < (numTiles - offset); j++) {
+		// note first index for current column
+		Ant.Board.tileColumnIDs.push({
+			first: id,
+			last: 0
+		});
+
+		for (j = 0; j < (numTiles - offset); j++) {
 			// id is self-incrementing because tiles are numbered sequentially 
 			tiles.push(Ant.Board.createTile(id++, i));
 		}
+
+		// note last index for current column
+		Ant.Board.tileColumnIDs[i].last = id - 1;
 
 		Ant.DOM.Tiles.append(
 			// create col for each set of tiles
@@ -746,30 +823,15 @@ Ant.Board.create = function () {
 		);
 	}
 
-	// hide single tiles to create random board
-	if (Ant.Settings.board.tilesHidden > 0) {
-		for (var i = 0; i < Ant.Settings.board.tilesHidden; i++) {
-			// exclude any tiles in first column by setting min to numTiles
-			hidden.push(numTiles + Math.floor(Math.random() * (Ant.Board.tiles.length - numTiles)));
-		}
-	
-	}
-
-console.info("Hidden tiles: ", hidden);
-
 	// bind all tiles and set default display
 	for (i = 0; i < Ant.Board.tiles.length; i++) {
 		Ant.Board.tiles[i].bind();
 		Ant.Board.tiles[i].markActive(false);
 		Ant.Board.tiles[i].DOM.dragWorker().hide();
-		
-		// hide any tiles in hidden array
-		for (var j = 0; j < hidden.length; j++) {
-			if (i === hidden[j]) {
-				Ant.Board.tiles[i].active(false);
-			}
-		}
 	}
+
+	// randomize tiles to freshen board
+	Ant.Board.createRandomTiles(numTiles);
 
 	// bind all draggables and droppables for moving ants
 	$("div.iconAnt").draggable({
