@@ -566,20 +566,25 @@ Ant.Board.createHill = function (id) {
 						attr: [["class", "hillFood"]],
 						children: [
 							Util.el("span", {
-								attr: [["id", "Hill" + id + "Food"]],
-								children: [Ant.Settings.ants.food]
-							}),
-							" ",
-							Util.el("div", {
-								attr: [
-									["title", "Cake. Delicious. Don't run out."],
-									["class", "iconFood"]
-								]
-							}),
-							Util.el("div", {
-								attr: [
-									["title", "Cake. Not yours."],
-									["class", "iconFoodBlack"]
+								attr: [["class", "hillWrapper"]],
+								children: [
+									Util.el("span", {
+										attr: [["id", "Hill" + id + "Food"]],
+										children: [Ant.Settings.ants.food]
+									}),
+									" ",
+									Util.el("div", {
+										attr: [
+											["title", "Cake. Delicious. Don't run out."],
+											["class", "iconFood"]
+										]
+									}),
+									Util.el("div", {
+										attr: [
+											["title", "Cake. Not yours."],
+											["class", "iconFoodBlack"]
+										]
+									})
 								]
 							})
 						]
@@ -588,20 +593,25 @@ Ant.Board.createHill = function (id) {
 						attr: [["class", "hillQueens"]],
 						children: [
 							Util.el("span", {
-								attr: [["id", "Hill" + id + "Queens"]],
-								children: [Ant.Settings.ants.queens]
-							}),
-							" ",
-							Util.el("div", {
-								attr: [
-									["title", "Queens. Can't live without 'em."],
-									["class", "iconQueen"]
-								]
-							}),
-							Util.el("div", {
-								attr: [
-									["title", "Queens. Not yours."],
-									["class", "iconQueenBlack"]
+								attr: [["class", "hillWrapper"]],
+								children: [
+									Util.el("span", {
+										attr: [["id", "Hill" + id + "Queens"]],
+										children: [Ant.Settings.ants.queens]
+									}),
+									" ",
+									Util.el("div", {
+										attr: [
+											["title", "Queens. Can't live without 'em."],
+											["class", "iconQueen"]
+										]
+									}),
+									Util.el("div", {
+										attr: [
+											["title", "Queens. Not yours."],
+											["class", "iconQueenBlack"]
+										]
+									})
 								]
 							})
 						]
@@ -610,22 +620,27 @@ Ant.Board.createHill = function (id) {
 						attr: [["class", "hillWorkers"]],
 						children: [
 							Util.el("span", {
-								attr: [["id", "Hill" + id + "Workers"]],
-								children: [Ant.Settings.ants.workers]
-							}),
-							" ",
-							Util.el("div", {
-								attr: [
-									["data-id", id],
-									["data-type", "hill"],
-									["title", "Workers (drag to swarm)"],
-									["class", "iconAnt"]
-								]
-							}),
-							Util.el("div", {
-								attr: [
-									["title", "Workers"],
-									["class", "iconAntBlack"]
+								attr: [["class", "hillWrapper"]],
+								children: [
+									Util.el("span", {
+										attr: [["id", "Hill" + id + "Workers"]],
+										children: [Ant.Settings.ants.workers]
+									}),
+									" ",
+									Util.el("div", {
+										attr: [
+											["data-id", id],
+											["data-type", "hill"],
+											["title", "Workers (drag to swarm)"],
+											["class", "iconAnt"]
+										]
+									}),
+									Util.el("div", {
+										attr: [
+											["title", "Workers"],
+											["class", "iconAntBlack"]
+										]
+									})
 								]
 							})
 						]

@@ -25,7 +25,7 @@
 		<h1>Go east, young ant</h1>
 
 		<div id="Turn">
-			<div class="turnBox" title="The current player"><span id="Player" class="spanGrayLight marginSlim">Nobody</span></div>
+			<div class="turnBox" title="The current player">Turn: <span id="Player" class="spanYellow marginSlim">Nobody</span></div>
 			<div class="turnBox" title="Moves left this turn">Moves: <span id="Moves" class="spanGrayLight marginSlim">0</span></div>
 			<div class="turnBox" title="Next yield for this player">Yield: <span id="Yielde" class="spanRed marginSlim">0</span></div>
 			<div class="turnBox" title="Upkeep cost for this player">Upkeep: <span id="Upkeep" class="spanRed marginSlim">0</span></div>
@@ -57,7 +57,7 @@
 			$("#NewGame").css("opacity", "0.3").hover(function () {
 				$(this).css("opacity", "1");
 			}, function () {
-				$(this).css("opacity", "0.1");
+				$(this).css("opacity", "0.05");
 			});
 			Ant.Board.reset();
 			Ant.Board.promptPlayers($("#NewPlayers").slider("value"));

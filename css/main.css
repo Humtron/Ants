@@ -17,9 +17,12 @@ body {
 
 /*** divs and display ***/
 h1 { margin: 10px 0 20px 0; }
+h1, h3 {
+	text-shadow: 1px 1px 2px #AAAAAA;
+}
 .hide { display: none; }
 .clear { clear: both; }
-.marginSlim { margin: 5px; }
+.marginSlim { margin: 2px; }
 .marginBottomSlim { margin-bottom: 15px; }
 .marginBottom { margin-bottom: 20px; }
 .marginLeft { margin-left: 20px; }
@@ -191,9 +194,6 @@ input {
 .turnBoxRight {
 	float: right;
 }
-#Player, #Moves, #Yielde, #Upkeep {
-	font-weight: bold;
-}
 
 /*** board hills and tiles ***/
 .hill {
@@ -203,7 +203,7 @@ input {
 	background: #FFFFFF url("../images/hill1.jpg") no-repeat;
 	border: 2px solid #999999;
 	border-radius: 5px;
-	box-shadow: 2px 2px 5px #666666;
+	box-shadow: 1px 1px 2px #999999;
 	opacity: 0.5;
 }
 .tile {
@@ -213,7 +213,7 @@ input {
 	background: #C6D9AF;
 	border: 2px solid #7CA34D;
 	border-radius: 5px;
-	box-shadow: 2px 2px 5px #999999;
+	box-shadow: 1px 1px 2px #7CA34D;
 	cursor: pointer;
 }
 .tileCol {
@@ -225,6 +225,7 @@ input {
 }
 .hillActive {
 	opacity: 1;
+	box-shadow: 2px 2px 4px #666666;
 }
 .hillInactive {
 	background: #BBBBBB;
@@ -251,41 +252,44 @@ input {
 	height: 36px;
 }
 .hillName {
-	padding: 5px;
+	padding: 0 5px 5px 5px;
 	border-radius: 5px;
 	height: 22px;
+	text-shadow: 1px 1px 2px #AAAAAA;
+}
+.hillActive .hillName {
+	font-weight: bold;
 }
 .hillName, .tileFood {
 	overflow: hidden;
-	font: bold 18px Arial, Helvetica, sans-serif;
+	font: 20px Arial, Helvetica, sans-serif;
 }
 .hillFood, .hillQueens, .hillWorkers {
 	margin: 5px 10px;
 	padding: 5px;
 	border-radius: 5px;
-	width: 80px;
+	width: 100px;
+	text-shadow: 0 0 2px #AAAAAA;
+	font: 20px Arial, Helvetica, sans-serif;
 }
-.hillName, .hillFood, .hillQueens, .hillWorkers {
-	background: none repeat scroll 0 0 rgba(255, 255, 255, 0.7);
+.hillWrapper {
+	background: none repeat scroll 0 0 rgba(255, 255, 255, 0.6);
+	padding: 4px 5px;
+	border-radius: 5px;
 }
-.hillInactive .hillName, .hillInactive .hillFood,
-.hillInactive .hillQueens, .hillInactive .hillWorkers {
+.hillInactive .hillWrapper {
 	background: none;
-}
-.hillFood {
-	font: bold 20px Arial, Helvetica, sans-serif;
-}
-.hillQueens, .hillWorkers {
-	font: bold 18px Arial, Helvetica, sans-serif;
 }
 .tileFood {
 	height: 20px;
-	font-size: 20px;
 	line-height: 16px;
+	color: #003300;
+	text-shadow: 1px 1px 1px #7CA34D;
 }
 .tileAnts {
-	margin: 0 0 0 8px;
-	font: bold 16px Arial, Helvetica, sans-serif;
+	margin: 0 0 0 5px;
+	font: 16px Arial, Helvetica, sans-serif;
+	text-shadow: 1px 1px 1px #AAAAAA;
 }
 .tileActive .tileText {
 	border-color: #FFFFFF;
