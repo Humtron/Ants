@@ -22,7 +22,7 @@ var Ant = {
 			tileOffset: 1,
 			// how many tiles to hide, to increase
 			// board randomness
-			tilesHidden: 6,
+			tilesHidden: 0,
 			// how many moves per turn by a player
 			movesPerTurn: 1
 		},
@@ -206,7 +206,7 @@ var Ant = {
 			domTile, domDragWorker, domIconWorker, domIconFood, domIconFoodInactive,
 			domFood, domAnts,
 			// get/set functions to manage both JS and DOM values
-			active, food, workers, yielde, markActive,
+			active, food, workers, yielde, markActive, markMove,
 			// private values (with defaults)
 			id = tile.id,
 			_active = true,
@@ -343,6 +343,15 @@ var Ant = {
 			}
 		};
 
+		// mark possible move
+		markMove = function (active) {
+			if (active) {
+				domTile.addClass("tileMove");
+			} else {
+				domTile.removeClass("tileMove");
+			}
+		};
+
 		return {
 			type: "tile",
 			id: id,
@@ -352,7 +361,8 @@ var Ant = {
 			food: food,
 			workers: workers,
 			yielde: yielde,
-			markActive: markActive
+			markActive: markActive,
+			markMove: markMove
 		};
 	}
 };
@@ -373,7 +383,7 @@ Ant.DOM.bind = function () {
 Ant.DOM.bindQtip = function () {
 	var settings = {
 		style: {
-			name: "cream",
+			name: "dark",
 			tip: "bottomMiddle"
 		},
 		position: {
@@ -784,11 +794,6 @@ For 4 random cols and N hidden tiles:
 	}
 };
 
-Ant.Board.createFog = function () {
-	// create fog to cover all of tile columns except first column
-
-};
-
 Ant.Board.create = function () {
 	var tiles = [],
 		// 3 tiles per player hill
@@ -859,6 +864,12 @@ Ant.Board.create = function () {
 		// without slipping behind the containing div
 		helper: function () {
 			return $(this).clone().appendTo("body").css("zIndex", 10).show();
+		},
+		start: function (event, ui) {
+			Ant.Board.startMoves($(this));
+		},
+		stop: function (event, ui) {
+			Ant.Board.stopMoves($(this));
 		}
 	});
 	$("div.hill").droppable({
@@ -1013,6 +1024,51 @@ Ant.Board.addWorkers = function (numWorkers) {
 
 		return true;
 	}
+};
+
+Ant.Board.startMoves = function (draggable) {
+	var from, fromID = Util.cleanNumber(draggable.attr("data-id"));
+
+	// find source
+	// calls to workers() method will overload with player,
+	// which is ignored on hills, but essential on tiles
+	if (draggable.attr("data-type") === "hill") {
+		from = Ant.Board.hills[fromID];
+	} else {
+		from = Ant.Board.tiles[fromID];
+	}
+
+//console.info("from: ", from);
+
+	if (from.type === "hill") {
+// TODO: calculate starting tiles for each hill
+
+	} else {
+// TODO: add guards to prevent out of bounds tile IDs
+
+/*
+		// same col: tile +- 1
+		Ant.Board.tiles[fromID - 1].markMove(true);
+		Ant.Board.tiles[fromID + 1].markMove(true);
+
+		// left col:
+		// tile - (3 * number of players)
+		// tile - (3 * number of players) + 1
+		Ant.Board.tiles[fromID - (3 * Ant.Board.players.length)].markMove(true);
+		Ant.Board.tiles[fromID - (3 * Ant.Board.players.length) + 1].markMove(true);
+
+		// right col:
+		// tile + (3 * number of players)
+		// tile + (3 * number of players) - 1
+		Ant.Board.tiles[fromID + (3 * Ant.Board.players.length)].markMove(true);
+		Ant.Board.tiles[fromID + (3 * Ant.Board.players.length) - 1].markMove(true);
+*/
+
+	}
+};
+
+Ant.Board.stopMoves = function (draggable) {
+	$("div.tileMove").removeClass("tileMove");
 };
 
 Ant.Board.moveWorkers = function (draggable, droppable) {

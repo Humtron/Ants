@@ -16,9 +16,12 @@ body {
 }
 
 /*** divs and display ***/
-h1 { margin: 10px 0 20px 0; }
-h1, h3 {
+h1 {
+	margin: 10px 0 20px 0;
 	text-shadow: 1px 1px 2px #AAAAAA;
+}
+h3 {
+	text-shadow: 1px 1px 2px #CCCCCC;
 }
 .hide { display: none; }
 .clear { clear: both; }
@@ -140,8 +143,8 @@ input {
 	color: #FFFFFF;
 	font-weight: bold;
 }
-.spanGreen { background: #009900; }
-.spanRed { background: #CC0000; }
+.spanGreen { background: #7CA34D; }
+.spanRed { background: #AA0000; }
 .spanGray { background: #666666; }
 .spanGrayLight { background: #999999; }
 .spanYellow { background: #CCA300; }
@@ -155,6 +158,9 @@ input {
 	width: 50px;
 	display: inline-block;
 	margin: 0 18px 0 10px;
+}
+#Player {
+	font-weight: bold;
 }
 #Meta {
 	display: none;
@@ -195,6 +201,20 @@ input {
 	float: right;
 }
 
+/*** animation keyframes ***/
+@-webkit-keyframes tileMovePulse {
+	0% { opacity: 0.5; }
+	100% { opacity: 1; }
+}
+@-moz-keyframes tileMovePulse {
+	0% { opacity: 0.5; }
+	100% { opacity: 1; }
+}
+@keyframes tileMovePulse {
+	0% { opacity: 0.5; }
+	100% { opacity: 1; }
+}
+
 /*** board hills and tiles ***/
 .hill {
 	height: 168px;
@@ -206,6 +226,10 @@ input {
 	box-shadow: 1px 1px 2px #999999;
 	opacity: 0.5;
 }
+.tileCol {
+	float: left;
+	width: 112px;
+}
 .tile {
 	height: 50px;
 	margin: 5px 2px;
@@ -215,10 +239,6 @@ input {
 	border-radius: 5px;
 	box-shadow: 1px 1px 2px #7CA34D;
 	cursor: pointer;
-}
-.tileCol {
-	float: left;
-	width: 112px;
 }
 .tileActive {
 	background: #FFFFFF;
@@ -231,7 +251,13 @@ input {
 	background: #BBBBBB;
 	box-shadow: none;
 }
-.hillDrop, .tileDrop {
+.hillMove, .tileMove {
+	-webkit-animation: tileMovePulse 1s infinite alternate;
+	-moz-animation: tileMovePulse 1s infinite alternate;
+	animation: tileMovePulse 1s infinite alternate;
+}
+/* only matches if both classes exist */
+.hillMove.hillDrop, .tileMove.tileDrop {
 	background: #FFCC00;
 }
 .hillText, .tileText {
@@ -239,12 +265,6 @@ input {
 }
 .hillText {
 	color: #666666;
-}
-.hillActive .hillText {
-	color: #333333;	
-}
-.hillInactive .hillText {
-	color: #666666;	
 }
 .tileText {
 	border: 2px solid #9AC775;
@@ -255,10 +275,7 @@ input {
 	padding: 0 5px 5px 5px;
 	border-radius: 5px;
 	height: 22px;
-	text-shadow: 1px 1px 2px #AAAAAA;
-}
-.hillActive .hillName {
-	font-weight: bold;
+	text-shadow: 1px 1px 2px #CCCCCC;
 }
 .hillName, .tileFood {
 	overflow: hidden;
@@ -267,9 +284,7 @@ input {
 .hillFood, .hillQueens, .hillWorkers {
 	margin: 5px 10px;
 	padding: 5px;
-	border-radius: 5px;
-	width: 100px;
-	text-shadow: 0 0 2px #AAAAAA;
+	text-shadow: 1px 1px 2px #CCCCCC;
 	font: 20px Arial, Helvetica, sans-serif;
 }
 .hillWrapper {
@@ -279,6 +294,16 @@ input {
 }
 .hillInactive .hillWrapper {
 	background: none;
+}
+.hillInactive .hillText {
+	color: #666666;	
+}
+.hillActive .hillText {
+	color: #333333;	
+}
+.hillActive .hillName, .hillActive .hillFood, 
+.hillActive .hillQueens, .hillActive .hillWorkers {
+	font-weight: bold;
 }
 .tileFood {
 	height: 20px;
