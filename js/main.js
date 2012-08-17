@@ -48,322 +48,285 @@ var Ant = {
 		}
 	},
 	Player: function (player) {
-		// get/set functions to manage both JS and DOM values
-		var active,
-			_active = true;
+		// considered private properties, but must be
+		// tied to "this" context so prototype can access them
+		this._active = true;
 
-		active = function (bool) {
-			if (Util.getType(bool) === "boolean") {
-				_active = bool;
-			}
-			return _active;
+		// public hereafter
+		this.id = player.id;
+		this.name = player.name;
+		this.yielde = {
+			last: 0,
+			next: 0
 		};
-
-		return {
-			id: player.id,
-			name: player.name,
-			active: active,
-			yielde: {
-				last: 0,
-				next: 0
-			},
-			upkeep: {
-				next: 0
-			}
+		this.upkeep = {
+			next: 0
 		};
 	},
 	Hill: function (hill) {
-		// DOM binding object, binder, local bindings
-		var DOM, bind,
-			domHill, domDragWorker, domIconWorker,
-			domIconFood, domIconFoodInactive, domIconQueen, domIconQueenInactive,
-			domQueens, domWorkers, domFood,
-			// get/set functions to manage both JS and DOM values
-			active, food, queens, workers, yielde, markActive,
-			// private values (with defaults)
-			id = hill.id,
-			_active = true,
-			_queens = Ant.Settings.ants.queens,
-			_workers = Ant.Settings.ants.workers,
-			_food = Ant.Settings.ants.food;
+		// considered private properties, but must be
+		// tied to "this" context so prototype can access them
+		this._active = true;
+		this._queens = Ant.Settings.ants.queens;
+		this._workers = Ant.Settings.ants.workers;
+		this._food = Ant.Settings.ants.food;
 
-		// bind is called externally when DOM is ready
-		bind = function () {
-			domHill = $("#Hill" + id);
-			domDragWorker = $("#Hill" + id + " div.iconAnt");
-			domIconWorker = $("#Hill" + id + " div.iconAntBlack");
-			domIconFood = $("#Hill" + id + " div.iconFood");
-			domIconFoodInactive = $("#Hill" + id + " div.iconFoodBlack");
-			domIconQueen = $("#Hill" + id + " div.iconQueen");
-			domIconQueenInactive = $("#Hill" + id + " div.iconQueenBlack");
-			domQueens = $("#Hill" + id + "Queens");
-			domWorkers = $("#Hill" + id + "Workers");
-			domFood = $("#Hill" + id + "Food");
-		};
-
-		DOM = {
-			dragWorker: function () { return domDragWorker; },
-			iconWorker: function () { return domIconWorker; }
-		};
-
-		active = function (bool) {
-			if (Util.getType(bool) === "boolean") {
-				_active = bool;
-
-				// hides hill without affecting layout
-				if (!_active) {
-					//domHill.css("visibility", "hidden");
-					domHill.removeClass("hillActive").addClass("hillInactive");
-				}
-			}
-			return _active;
-		};
-
-		food = function (num) {
-			if (Util.getType(num) === "number") {
-				_food = num;
-				domFood.text(num);
-			}
-			return _food;
-		};
-
-		queens = function (num) {
-			if (Util.getType(num) === "number") {
-				_queens = num;
-				domQueens.text(num);
-			}
-			return _queens;
-		};
-
-		workers = function (num) {
-			// update workers
-			if (Util.getType(num) === "number") {
-				_workers = num;
-				domWorkers.text(num);
-
-				// show draggable if workers exist
-				if (_workers > 0) {
-					domDragWorker.show();
-					domIconWorker.hide();
-				} else {
-					domDragWorker.hide();
-					domIconWorker.show();
-				}
-			}
-
-			return _workers;
-		};
-		
-		// placeholder
-		yielde = function () {
-			return 0;
-		};
-
-		// mark whether active
-		markActive = function (active) {
-			if (active) {
-				domHill.addClass("hillActive");
-				domIconFood.show();
-				domIconFoodInactive.hide();
-				domIconQueen.show();
-				domIconQueenInactive.hide();
-
-				// show draggable worker if workers exist
-				if (_workers > 0) {
-					domDragWorker.show();
-					domIconWorker.hide();
-				} else {
-					domDragWorker.hide();
-					domIconWorker.show();
-				}
-			} else {
-				domHill.removeClass("hillActive");
-				domIconFood.hide();
-				domIconFoodInactive.show();
-				domIconQueen.hide();
-				domIconQueenInactive.show();
-				domDragWorker.hide();
-				domIconWorker.show();
-			}
-		};
-
-		return {
-			type: "hill",
-			id: id,
-			DOM: DOM,
-			bind: bind,
-			active: active,
-			food: food,
-			queens: queens,
-			workers: workers,
-			yielde: yielde,
-			markActive: markActive
-		};
+		// public hereafter
+		this.type = "hill";
+		this.id = hill.id;
+		this.DOM = {};
 	},
 	Tile: function (tile) {
-		// DOM binding object, binder, local bindings
-		var DOM, bind,
-			domTile, domDragWorker, domIconWorker, domIconFood, domIconFoodInactive,
-			domFood, domAnts,
-			// get/set functions to manage both JS and DOM values
-			active, food, workers, yielde, markActive, markMove,
-			// private values (with defaults)
-			id = tile.id,
-			_active = true,
-			_food = tile.food,
-			_ants = [],
-			_workersTotal = 0;
+		var i;
+
+		// considered private properties, but must be
+		// tied to "this" context so prototype can access them
+		this._active = true;
+		this._food = tile.food;
+		this._ants = [];
+		this._workersTotal = 0;
+
+		// public hereafter
+		this.type = "tile";
+		this.id = tile.id;
+		this.DOM = {};
 
 		// add all players to local ants array
-		for (var i = 0; i < Ant.Board.players.length; i++) {
-			_ants.push({
+		for (i = 0; i < Ant.Board.players.length; i++) {
+			this._ants.push({
 				workers: 0
 			});
 		}
+	}
+};
 
-		// bind is called externally when DOM is ready
-		bind = function () {
-			domTile = $("#Tile" + id);
-			domDragWorker = $("#Tile" + id + " div.iconAnt");
-			domIconWorker = $("#Tile" + id + " div.iconAntBlack");
-			domIconFood = $("#Tile" + id + " div.iconFood");
-			domIconFoodInactive = $("#Tile" + id + " div.iconFoodBlack");
-			domFood = $("#Tile" + id + "Food");
-			domAnts = $("#Tile" + id + "Ants");
-		};
+Ant.Player.prototype.active = function (bool) {
+	if (Util.getType(bool) === "boolean") {
+		this._active = bool;
+	}
+	return this._active;
+};
 
-		DOM = {
-			dragWorker: function () { return domDragWorker; },
-			iconWorker: function () { return domIconWorker; }
-		};
+// bind is called manually when DOM is ready
+Ant.Hill.prototype.bind = function () {
+	// object literal with all DOM bindings
+	this.DOM = {
+		hill: $("#Hill" + this.id),
+		dragWorker: $("#Hill" + this.id + " div.iconAnt"),
+		iconWorker: $("#Hill" + this.id + " div.iconAntBlack"),
+		iconFood: $("#Hill" + this.id + " div.iconFood"),
+		iconFoodInactive: $("#Hill" + this.id + " div.iconFoodBlack"),
+		iconQueen: $("#Hill" + this.id + " div.iconQueen"),
+		iconQueenInactive: $("#Hill" + this.id + " div.iconQueenBlack"),
+		food: $("#Hill" + this.id + "Food"),
+		queens: $("#Hill" + this.id + "Queens"),
+		workers: $("#Hill" + this.id + "Workers")
+	};
+};
 
-		active = function (bool) {
-			if (Util.getType(bool) === "boolean") {
-				_active = bool;
+Ant.Hill.prototype.active = function (bool) {
+	if (Util.getType(bool) === "boolean") {
+		this._active = bool;
 
-				// hides tile without affecting layout
-				if (!_active) {
-					domTile.css("visibility", "hidden");
+		// hides without affecting layout
+		if (!this._active) {
+			this.DOM.hill.removeClass("hillActive").addClass("hillInactive");
+		}
+	}
+	return this._active;
+};
+
+Ant.Hill.prototype.food = function (num) {
+	if (Util.getType(num) === "number") {
+		this._food = num;
+		this.DOM.food.text(num);
+	}
+	return this._food;
+};
+
+Ant.Hill.prototype.queens = function (num) {
+	if (Util.getType(num) === "number") {
+		this._queens = num;
+		this.DOM.queens.text(num);
+	}
+	return this._queens;
+};
+
+Ant.Hill.prototype.workers = function (num) {
+	// update workers
+	if (Util.getType(num) === "number") {
+		this._workers = num;
+		this.DOM.workers.text(num);
+
+		// show draggable if workers exist
+		if (this._workers > 0) {
+			this.DOM.dragWorker.show();
+			this.DOM.iconWorker.hide();
+		} else {
+			this.DOM.dragWorker.hide();
+			this.DOM.iconWorker.show();
+		}
+	}
+
+	return this._workers;
+};
+
+Ant.Hill.prototype.yielde = function () {
+	return 0;
+};
+
+Ant.Hill.prototype.markActive = function (active) {
+	if (active) {
+		this.DOM.hill.addClass("hillActive");
+		this.DOM.iconFood.show();
+		this.DOM.iconFoodInactive.hide();
+		this.DOM.iconQueen.show();
+		this.DOM.iconQueenInactive.hide();
+
+		// show draggable if workers exist
+		if (this._workers > 0) {
+			this.DOM.dragWorker.show();
+			this.DOM.iconWorker.hide();
+		} else {
+			this.DOM.dragWorker.hide();
+			this.DOM.iconWorker.show();
+		}
+	} else {
+		this.DOM.hill.removeClass("hillActive");
+		this.DOM.iconFood.hide();
+		this.DOM.iconFoodInactive.show();
+		this.DOM.iconQueen.hide();
+		this.DOM.iconQueenInactive.show();
+		this.DOM.dragWorker.hide();
+		this.DOM.iconWorker.show();
+	}
+};
+
+// bind is called manually when DOM is ready
+Ant.Tile.prototype.bind = function () {
+	// object literal with all DOM bindings
+	this.DOM = {
+		tile: $("#Tile" + this.id),
+		dragWorker: $("#Tile" + this.id + " div.iconAnt"),
+		iconWorker: $("#Tile" + this.id + " div.iconAntBlack"),
+		iconFood: $("#Tile" + this.id + " div.iconFood"),
+		iconFoodInactive: $("#Tile" + this.id + " div.iconFoodBlack"),
+		food: $("#Tile" + this.id + "Food"),
+		ants: $("#Tile" + this.id + "Ants")
+	};
+};
+
+Ant.Tile.prototype.active = function (bool) {
+	if (Util.getType(bool) === "boolean") {
+		this._active = bool;
+
+		// hides without affecting layout
+		if (!this._active) {
+			this.DOM.tile.css("visibility", "hidden");
+		} else {
+			this.DOM.tile.css("visibility", "visible");
+		}
+	}
+	return this._active;
+};
+
+Ant.Tile.prototype.food = function (num) {
+	if (Util.getType(num) === "number") {
+		this._food = num;
+		this.DOM.food.text(num);
+	}
+	return this._food;
+};
+
+// get/set workers for a player, or get all workers
+Ant.Tile.prototype.workers = function (num, player) {
+	if (Util.getType(player) === "number") {
+		if (Util.getType(num) === "number") {
+			// update total (new minus old)
+			this._workersTotal += num - this._ants[player].workers;
+			this.DOM.ants.text(this._workersTotal);
+			
+			this._ants[player].workers = num;
+
+			// if no workers, hide worker display, and mark inactive
+			if (this._workersTotal < 1) {
+				$(this.DOM.dragWorker[0].parentNode).hide();
+				this.markActive(false);
+			} else {
+				$(this.DOM.dragWorker[0].parentNode).show();
+
+				// show draggable if workers exist, and player is current player, and mark active
+				if (this._ants[player].workers > 0 && player === Ant.Turn.player) {
+					this.DOM.dragWorker.show();
+					this.DOM.iconWorker.hide();
+					this.markActive(true);
 				} else {
-					domTile.css("visibility", "visible");
+					this.DOM.dragWorker.hide();
+					this.DOM.iconWorker.show();
+					this.markActive(false);
 				}
 			}
-			return _active;
-		};
+		}
+		
+		// return workers for this player
+		return this._ants[player].workers;
+	} else {
+		// return total ants for all players
+		return this._workersTotal;
+	}
+};
 
-		food = function (num) {
-			if (Util.getType(num) === "number") {
-				_food = num;
-				domFood.text(num);
+// get yield for a player, and allow hypothetical yield calculation
+Ant.Tile.prototype.yielde = function (player, options) {
+	var playerYield = 0,
+		playerWorkers = this.workers(null, player),
+		allWorkers = this.workers();
+
+	if (Util.getType(player) === "number") {
+		// allow potential yield calculations via options object
+		if (Util.getType(options) === "object") {
+			// overwrite playerWorkers with theoretical worker number
+			// and allWorkers with difference
+			if (Util.getType(options.workers) === "number") {
+				allWorkers += options.workers - playerWorkers;
+				playerWorkers = options.workers;
 			}
-			return _food;
-		};
+		}
 
-		// get/set workers for a player, or get all workers
-		workers = function (num, player) {
-			if (Util.getType(player) === "number") {
-				if (Util.getType(num) === "number") {
-					// update total (new minus old)
-					_workersTotal += num - _ants[player].workers;
-					domAnts.text(_workersTotal);
-					
-					_ants[player].workers = num;
+		// check if player even has workers here
+		if (playerWorkers > 0) {
+			// yield is the percentage of this player's workers
+			// measured against all workers in the tile
+			// multiplied against the total food in the tile
+			playerYield = Math.floor((playerWorkers / allWorkers) * this.food());
 
-					// if no workers, hide worker display, and mark inactive
-					if (_workersTotal < 1) {
-						$(domDragWorker[0].parentNode).hide();
-						markActive(false);
-					} else {
-						$(domDragWorker[0].parentNode).show();
+			// if workers take home less than 1 food each, 
+			// force minimum food per worker to 1 food
+			if (playerYield === 0) { playerYield = playerWorkers; }
+		}
+	}
 
-						// show draggable if workers exist, and player is current player, and mark active
-						if (_ants[player].workers > 0 && player === Ant.Turn.player) {
-							domDragWorker.show();
-							domIconWorker.hide();
-							markActive(true);
-						} else {
-							domDragWorker.hide();
-							domIconWorker.show();
-							markActive(false);
-						}
-					}
-				}
-				
-				// return workers for this player
-				return _ants[player].workers;
-			} else {
-				// return total ants for all players
-				return _workersTotal;
-			}
-		};
+	return playerYield;
+};
 
-		// get yield for a player
-		yielde = function (player, options) {
-			var playerYield = 0,
-				playerWorkers = workers(null, player),
-				allWorkers = workers();
+Ant.Tile.prototype.markActive = function (active) {
+	if (active) {
+		this.DOM.tile.addClass("tileActive");
+		this.DOM.iconFood.show();
+		this.DOM.iconFoodInactive.hide();
+	} else {
+		this.DOM.tile.removeClass("tileActive");
+		this.DOM.iconFood.hide();
+		this.DOM.iconFoodInactive.show();
+	}
+};
 
-			if (Util.getType(player) === "number") {
-				// allow potential yield calculations via options object
-				if (Util.getType(options) === "object") {
-					// overwrite playerWorkers with theoretical worker number
-					// and allWorkers with difference
-					if (Util.getType(options.workers) === "number") {
-						allWorkers += options.workers - playerWorkers;
-						playerWorkers = options.workers;
-					}
-				}
-
-				// check if player even has workers here
-				if (playerWorkers > 0) {
-					// yield is the percentage of this player's workers
-					// measured against all workers in the tile
-					// multiplied against the total food in the tile
-					playerYield = Math.floor((playerWorkers / allWorkers) * food());
-
-					// if workers take home less than 1 food each, 
-					// force minimum food per worker to 1 food
-					if (playerYield === 0) { playerYield = playerWorkers; }
-				}
-			}
-
-			return playerYield;
-		};
-
-		// mark whether active
-		markActive = function (active) {
-			if (active) {
-				domTile.addClass("tileActive");
-				domIconFood.show();
-				domIconFoodInactive.hide();
-			} else {
-				domTile.removeClass("tileActive");
-				domIconFood.hide();
-				domIconFoodInactive.show();
-			}
-		};
-
-		// mark possible move
-		markMove = function (active) {
-			if (active) {
-				domTile.addClass("tileMove");
-			} else {
-				domTile.removeClass("tileMove");
-			}
-		};
-
-		return {
-			type: "tile",
-			id: id,
-			bind: bind,
-			DOM: DOM,
-			active: active,
-			food: food,
-			workers: workers,
-			yielde: yielde,
-			markActive: markActive,
-			markMove: markMove
-		};
+// mark possible move
+Ant.Tile.prototype.markMove = function (active) {
+	if (active) {
+		this.DOM.tile.addClass("tileMove");
+	} else {
+		this.DOM.tile.removeClass("tileMove");
 	}
 };
 
@@ -548,6 +511,7 @@ Ant.Board.createPlayers = function (numPlayers) {
 			})
 		);
 
+		// overwrite automatic name, if better name is provided
 		playerName = $("#Player" + i).val();
 		if (playerName) {
 			Ant.Board.players[i].name = playerName;
@@ -556,7 +520,11 @@ Ant.Board.createPlayers = function (numPlayers) {
 };
 
 Ant.Board.createHill = function (id) {
-	Ant.Board.hills.push(new Ant.Hill({ id: id }));
+	Ant.Board.hills.push(
+		new Ant.Hill({
+			id: id
+		})
+	);
 
 	return Util.el("div", {
 		attr: [
@@ -666,10 +634,12 @@ Ant.Board.createTile = function (id, col) {
 	var food = Ant.Settings.food.min + 
 		Math.floor((Math.random() * Ant.Settings.food.range) + (col * Ant.Settings.food.weight));
 
-	Ant.Board.tiles.push(new Ant.Tile({
-		id: id,
-		food: food
-	}));
+	Ant.Board.tiles.push(
+		new Ant.Tile({
+			id: id,
+			food: food
+		})
+	);
 
 	return Util.el("div", {
 		attr: [
@@ -807,7 +777,7 @@ Ant.Board.create = function () {
 		Ant.DOM.Hills.append(Ant.Board.createHill(i));
 		Ant.Board.hills[i].bind();
 		Ant.Board.hills[i].markActive(false);
-		Ant.Board.hills[i].DOM.dragWorker().hide();
+		Ant.Board.hills[i].DOM.dragWorker.hide();
 	}
 
 	// create columns of tiles, left to right
@@ -847,7 +817,7 @@ Ant.Board.create = function () {
 	for (i = 0; i < Ant.Board.tiles.length; i++) {
 		Ant.Board.tiles[i].bind();
 		Ant.Board.tiles[i].markActive(false);
-		Ant.Board.tiles[i].DOM.dragWorker().hide();
+		Ant.Board.tiles[i].DOM.dragWorker.hide();
 	}
 
 	// randomize tiles to freshen board
@@ -866,10 +836,10 @@ Ant.Board.create = function () {
 			return $(this).clone().appendTo("body").css("zIndex", 10).show();
 		},
 		start: function (event, ui) {
-			Ant.Board.startMoves($(this));
+			Ant.Board.startMove($(this));
 		},
 		stop: function (event, ui) {
-			Ant.Board.stopMoves($(this));
+			Ant.Board.stopMove($(this));
 		}
 	});
 	$("div.hill").droppable({
@@ -1026,7 +996,7 @@ Ant.Board.addWorkers = function (numWorkers) {
 	}
 };
 
-Ant.Board.startMoves = function (draggable) {
+Ant.Board.startMove = function (draggable) {
 	var from, fromID = Util.cleanNumber(draggable.attr("data-id"));
 
 	// find source
@@ -1063,18 +1033,17 @@ Ant.Board.startMoves = function (draggable) {
 		Ant.Board.tiles[fromID + (3 * Ant.Board.players.length)].markMove(true);
 		Ant.Board.tiles[fromID + (3 * Ant.Board.players.length) - 1].markMove(true);
 */
-
 	}
 };
 
-Ant.Board.stopMoves = function (draggable) {
+Ant.Board.stopMove = function (draggable) {
 	$("div.tileMove").removeClass("tileMove");
 };
 
 Ant.Board.moveWorkers = function (draggable, droppable) {
 	var from, fromID = Util.cleanNumber(draggable.attr("data-id")),
 		fromWorkers = 0, fromWorkersPlural = false,
-		fromOldYield = 0, fromNewYield,
+		fromOldYield = 0, fromNewYield = 0,
 		to, toID = Util.cleanNumber(droppable.attr("data-id")),
 		toWorkers = 0,
 		toOldYield = 0, toNewYield = 0,
@@ -1303,7 +1272,7 @@ Ant.Board.viewTile = function (tile) {
 	// player has moves remaining
 	if (Ant.Board.hills[Ant.Turn.player].workers() > 0 && Ant.Turn.move < Ant.Settings.board.movesPerTurn) {
 		$("#PlayerSubmit").click(function () {
-			Ant.Board.moveWorkers(Ant.Board.hills[Ant.Turn.player].DOM.dragWorker(), $(tile));
+			Ant.Board.moveWorkers(Ant.Board.hills[Ant.Turn.player].DOM.dragWorker, $(tile));
 		});
 	} else {
 		$("#PlayerSubmit").hide();
@@ -1475,12 +1444,12 @@ Ant.Turn.updatePlayer = function () {
 		// show draggable worker on tile if workers exist, and mark active
 		if (Ant.Board.tiles[i].workers(null, Ant.Turn.player) > 0) {
 			Ant.Board.tiles[i].markActive(true);
-			Ant.Board.tiles[i].DOM.dragWorker().show();
-			Ant.Board.tiles[i].DOM.iconWorker().hide();
+			Ant.Board.tiles[i].DOM.dragWorker.show();
+			Ant.Board.tiles[i].DOM.iconWorker.hide();
 		} else {
 			Ant.Board.tiles[i].markActive(false);
-			Ant.Board.tiles[i].DOM.dragWorker().hide();
-			Ant.Board.tiles[i].DOM.iconWorker().show();
+			Ant.Board.tiles[i].DOM.dragWorker.hide();
+			Ant.Board.tiles[i].DOM.iconWorker.show();
 		}
 	}
 
@@ -1498,10 +1467,11 @@ Ant.Turn.updatePlayer = function () {
 
 Ant.Turn.doUpkeep = function() {
 	var player = Ant.Turn.player,
-		food = Ant.Board.hills[player].food,
+		hill = Ant.Board.hills[player], tile,
+		// bind aliased functions to get correct context
+		food = hill.food.bind(hill),
 		yielde = Ant.Board.players[player].yielde.last,
 		upkeep = Ant.Board.players[player].upkeep.next,
-		hill = Ant.Board.hills[player], tile,
 		workers, i = 0,
 		foodLeft = 0, deficit = 0,
 		workersStarved = 0, queensStarved = 0;
@@ -1625,7 +1595,9 @@ Ant.Turn.doUpkeep = function() {
 };
 
 Ant.Turn.doYield = function() {
-	var food = Ant.Board.hills[Ant.Turn.player].food,
+	var hill = Ant.Board.hills[Ant.Turn.player],
+		// bind aliased functions to get correct context
+		food = hill.food.bind(hill),
 		yielde = Ant.Board.players[Ant.Turn.player].yielde.next;
 
 	// add yield to hill food
@@ -1659,7 +1631,8 @@ Ant.Turn.gameOver = function (player) {
 };
 
 
-
+// TODO: replace dragWorkers and iconWorkers with simple class swap, and queens, and food
+// TODO: replace this.DOM.hill and this.DOM.tile with this.DOM.self
 
 var Util = {
 	// improved typeof (far more specific)
