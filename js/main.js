@@ -15,20 +15,20 @@ var Ant = {
 	},
 	Settings: {
 		board: {
-			// how many tile columns
-			tileColumns: 5,
 			// how many tiles to offset odd columns
 			// and how many less tiles odd columns will have
 			tileOffset: 1,
+			// how many tile columns
+			tileColumns: 5,
 			// how many tiles to hide, to increase
 			// board randomness
-			tilesHidden: 0,
+			tilesHidden: 6,
 			// how many moves per turn by a player
-			movesPerTurn: 3
+			movesPerTurn: 1
 		},
 		ants: {
 			// initial count
-			workers: 10,
+			workers: 3,
 			queens: 1,
 			food: 50,
 			// cost of breeding
@@ -335,7 +335,7 @@ Ant.Tile.prototype.markMove = function (active) {
 Ant.DOM.bind = function () {
 	Ant.DOM.Meta = $("#Meta");
 	Ant.DOM.Turn = $("#Turn");
-	Ant.DOM.Player = $("#Player");
+	//Ant.DOM.Player = $("#Player");
 	Ant.DOM.Moves = $("#Moves");
 	Ant.DOM.Upkeep = $("#Upkeep");
 	Ant.DOM.Yielde = $("#Yielde");
@@ -362,7 +362,7 @@ Ant.DOM.bindQtip = function () {
 	// because qtip get confused when bound more
 	// than once to an element, and $(el).qtip("destroy")
 	// will throw an error if qtip does not exist already
-	$("div[title], li[title]").each(function () {
+	$("div[title], input[title], li[title]").each(function () {
 		var that = $(this);
 
 		if (!that.data("qtip")) {
@@ -420,8 +420,8 @@ Ant.Board.promptPlayers = function (numPlayers) {
 		"<ul class='normal'>" +
 		"<li title='Number of tile columns'><label for='PlayerBoardTileColumns'>Tile columns</label>" +
 		"<input id='PlayerBoardTileColumns' type='text' size='5' value='" + Ant.Settings.board.tileColumns + "'></li>" +
-		"<li title='Odd columns are offset by half of this amount'><label for='PlayerBoardTileOffset'>Tile offset</label>" +
-		"<input id='PlayerBoardTileOffset' type='text' size='5' value='" + Ant.Settings.board.tileOffset + "'></li>" +
+		"<li title='Number of tiles to hide'><label for='PlayerBoardTileOffset'>Tiles hidden</label>" +
+		"<input id='PlayerBoardTilesHidden' type='text' size='5' value='" + Ant.Settings.board.tilesHidden + "'></li>" +
 		"<li title='How many moves can be made per turn'><label for='PlayerBoardTilesColonizedPerTurn'>Moves/turn</label>" +
 		"<input id='PlayerBoardMovesPerTurn' type='text' size='5' value='" + Ant.Settings.board.movesPerTurn + "'></li>" +
 		"</ul>" +
@@ -487,7 +487,7 @@ Ant.Board.promptPlayers = function (numPlayers) {
 Ant.Board.createSettings = function () {
 	// set game settings
 	Ant.Settings.board.tileColumns = Util.cleanNumber($("#PlayerBoardTileColumns").val());
-	Ant.Settings.board.tileOffset = Util.cleanNumber($("#PlayerBoardTileOffset").val());
+	Ant.Settings.board.tilesHidden = Util.cleanNumber($("#PlayerBoardTilesHidden").val());
 	Ant.Settings.board.movesPerTurn = Util.cleanNumber($("#PlayerBoardMovesPerTurn").val());
 	Ant.Settings.ants.workers = Util.cleanNumber($("#PlayerAntsWorkers").val());
 	Ant.Settings.ants.queens = Util.cleanNumber($("#PlayerAntsQueens").val());
@@ -1146,13 +1146,13 @@ Ant.Board.moveWorkers = function (draggable, droppable) {
 	yielde = (toNewYield - toOldYield) + (fromNewYield - fromOldYield);
 
 	Util.yetiDelete();
-	Util.yetiAdd("<h3>How many workers should swarm?</h3>" +
+	Util.yetiAdd("<h3>How many workers will swarm?</h3>" +
 		"<div id='PlayerSlider' style='width:300px;margin:10px'></div><br>" +
 		"Swarm <span id='PlayerWorkers' class='spanYellow'>1</span> " +
-		"<span id='PlayerWorkersPlural'>worker</span> to this " + to.type + ".&nbsp;&nbsp;" +
+		"<span id='PlayerWorkersPlural'>worker</span>.&nbsp;&nbsp;" +
 		"<span id='PlayerLeft' class='spanGray'>" + (fromWorkers - 1) + "</span> " +
-		"<span id='PlayerLeftPlural'>" + fromWorkersPlural + "</span> will stay behind.&nbsp;&nbsp;" +
-		"Your yield will change by " +
+		"<span id='PlayerLeftPlural'>" + fromWorkersPlural + "</span> stay behind.&nbsp;&nbsp;" +
+		"Your yield changes by " +
 		"<span id='PlayerYield' class='" + ((yielde > 0) ? "spanGreen" : "spanRed") + "'>" + yielde + "</span> food.<br><br>" +
 		"<input id='PlayerSubmit' type='button' value='Swarm workers'>" +
 		"<span id='PlayerCancel' class='spanLink'>Cancel</span>"
@@ -1498,7 +1498,7 @@ Ant.Turn.updatePlayer = function () {
 	}
 
 	// update current player's name
-	Ant.DOM.Player.text(Ant.Board.players[Ant.Turn.player].name);
+	//Ant.DOM.Player.text(Ant.Board.players[Ant.Turn.player].name);
 
 	// reset player moves
 	Ant.Turn.move = -1;
@@ -1657,7 +1657,7 @@ Ant.Turn.gameOver = function (player) {
 	Ant.Board.hills[player].active(false);
 
 	Util.yetiDelete();
-	Util.yetiAdd("<h3>You lost.</h3>" +
+	Util.yetiAdd("<h3>Oh dear. You've gone extinct.</h3>" +
 		"All your food is gone.<br>" +
 		"All your workers are dead.<br>" +
 		"All your queens are dead.<br><br>" +
@@ -1674,7 +1674,7 @@ Ant.Turn.gameOver = function (player) {
 	});
 };
 
-
+// TODO: allow moving north - south to make circular board
 // TODO: replace dragWorkers and iconWorkers with simple class swap, and queens, and food
 // TODO: don't allow current player to drag if no moves remaining
 
@@ -1753,7 +1753,7 @@ var Util = {
 		Util.yetiAddBackground();
 
 		// set defaults
-		uWidth = 700;
+		uWidth = 560;
 
 		// create yeti element
 		yetiDiv = document.createElement("div");

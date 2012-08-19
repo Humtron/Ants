@@ -1,6 +1,6 @@
 TODO:
 
-Make board round. South tiles can move onto north tiles, and vice versa. This will mean all columns have identical numbers of tiles?
+Make board round. South tiles can move onto north tiles, and vice versa.
 
 Randomly eliminate single tiles to create a more dynamic board
 	No tiles from first column

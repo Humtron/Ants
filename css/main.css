@@ -1,5 +1,14 @@
 /*** html and body tags ***/
-html { height: 100%; }
+html {
+	height: 100%;
+	/* better font smoothing on Mac webkit: maxvoltar.com/archive/-webkit-font-smoothing */
+	-webkit-font-smoothing: antialiased;
+	/* stops mobile from making bad decisions about enlarging text */
+	-webkit-text-size-adjust: none;
+	-moz-text-size-adjust: none;
+	-ms-text-size-adjust: none;
+	text-size-adjust: none;
+}
 body {
 	margin: 0;
 	padding: 0;
@@ -10,8 +19,8 @@ body {
 
 /*** body container ***/
 #container {
-	/* width: 1000px; (7 wide) */
-	width: 760px;
+	/* width: 1000px; */
+	width: 600px;
 	margin: 0 auto;
 }
 
@@ -54,7 +63,7 @@ input[type=button] {
 	padding: 3px 5px;
 	cursor: pointer;
 	color: #000000;
-	margin: 0 5px;
+	margin: 0 5px 0 0;
 }
 input[type=button]:active {
 	background: #CCA300 url("../images/button-active.png") repeat-x;
@@ -150,10 +159,6 @@ input {
 .spanYellow { background: #CCA300; }
 
 /*** board containers ***/
-#NewGame {
-	float: right;
-	margin-right: 50px;
-}
 #NewPlayers {
 	width: 50px;
 	display: inline-block;
@@ -172,6 +177,9 @@ input {
 	overflow: hidden;
 	border-radius: 10px;
 }
+#Board {
+	margin-bottom: 20px;
+}
 #Turn {
 	background: #FFFFFF;
 	padding: 10px;
@@ -184,11 +192,11 @@ input {
 }
 #Hills {
 	width: 160px;
-	margin-left: 15px;
+	margin-left: 5px;
 }
 #Tiles {
-	/* width: 785px; (7 wide) */
-	width: 565px;
+	/* width: 785px; */
+	width: 430px;
 	margin-left: 5px;
 }
 
@@ -228,7 +236,7 @@ input {
 }
 .tileCol {
 	float: left;
-	width: 112px;
+	width: 85px;
 }
 .tile {
 	height: 50px;
@@ -251,19 +259,7 @@ input {
 .hillInactive {
 	background: #BBBBBB;
 	box-shadow: none;
-}
-.hillMove, .tileMove {
-	-webkit-animation: tileMovePulse 1s infinite alternate;
-	-moz-animation: tileMovePulse 0.8s infinite alternate;
-	animation: tileMovePulse 1s infinite alternate;
-}
-/* only matches if both classes exist */
-.hillMove.hillDrop, .tileMove.tileDrop {
-	background: #FFCC00;
-	border-color: #CCA300;
-}
-.tileDrop > .tileText {
-	border-color: #CCA300;
+	opacity: 0.3;
 }
 .hillText, .tileText {
 	padding: 5px;
@@ -317,12 +313,25 @@ input {
 	text-shadow: 1px 1px 1px #7CA34D;
 }
 .tileAnts {
-	margin: 0 0 0 5px;
+	margin: 0 0 0 3px;
 	font: 16px Arial, Helvetica, sans-serif;
 	text-shadow: 1px 1px 1px #AAAAAA;
 }
 .tileActive .tileText {
 	border-color: #FFFFFF;
+}
+.hillMove, .tileMove {
+	-webkit-animation: tileMovePulse 1s infinite alternate;
+	-moz-animation: tileMovePulse 0.8s infinite alternate;
+	animation: tileMovePulse 1s infinite alternate;
+}
+/* only matches if both classes exist */
+.hillMove.hillDrop, .tileMove.tileDrop {
+	background: #FFCC00;
+	border-color: #CCA300;
+}
+.tileDrop > .tileText {
+	border-color: #CCA300;
 }
 
 /*** icons ***/

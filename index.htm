@@ -4,11 +4,13 @@
 	<title>Ant Swarm</title>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+	<meta name="viewport" content="width=600">
 	<link type="text/css" rel="stylesheet" href="libs/theme/sunny/jquery-ui-1.8.22.custom.css" />
 	<link type="text/css" rel="stylesheet" href="css/main.css?v=4" />
 	<script type="text/javascript" src="libs/js/jquery-1.7.2.min.js"></script>
 	<script type="text/javascript" src="libs/js/jquery-ui-1.8.22.custom.min.js"></script>
 	<script type="text/javascript" src="libs/js/jquery.qtip-1.0.0-rc3.min.js"></script>
+	<script type="text/javascript" src="libs/js/jquery.ui.touch-punch.min.js"></script>
 	<script type="text/javascript" src="js/main.js?v=2"></script>
 </head>
 <body>
@@ -16,29 +18,30 @@
 		<div id="Meta" style="float:right">
 			<span id="Score" class="spanLink">Scoreboard</span>
 		</div>
-		<div id="NewGame">
-			<input id="NewGameSubmit" type="button" value="Create new game"> with 
-			<div id="NewPlayers"></div> 
-			players
-		</div>
 
 		<h1>Go east, young ant</h1>
 
 		<div id="Turn">
-			<div class="turnBox" title="The current player"><span id="Player" class="marginSlim">Nobody</span> &mdash;</div>
+			<!--<div class="turnBox" title="The current player"><span id="Player" class="marginSlim">Nobody</span> &mdash;</div>-->
 			<div class="turnBox" title="Moves left this turn"><span id="Moves" class="spanGrayLight marginSlim">0</span> moves</div>
 			<div class="turnBox" title="Next yield for this player"><span id="Yielde" class="spanRed marginSlim">0</span> yield</div>
 			<div class="turnBox" title="Upkeep cost for this player"><span id="Upkeep" class="spanRed marginSlim">0</span> upkeep</div>
 			<div class="turnBoxRight">
-				<input id="BuyQueens" type="button" value="Queens ++"> 
-				<input id="BuyWorkers" type="button" value="Workers ++"> 
-				<input id="NextPlayer" type="button" value="End turn">
+				<input id="BuyQueens" type="button" title="Hatch more queens" value="Queens++"> 
+				<input id="BuyWorkers" type="button" title="Hatch more workers" value="Workers++"> 
+				<input id="NextPlayer" type="button" title="End turn" value="End">
 			</div>
 		</div>
 
 		<div id="Board">
 			<div id="Hills"></div>
 			<div id="Tiles"></div>
+		</div>
+
+		<div id="NewGame">
+			<input id="NewGameSubmit" type="button" value="Create new game"> with 
+			<div id="NewPlayers"></div> 
+			players
 		</div>
 	</div>
 
