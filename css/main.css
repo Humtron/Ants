@@ -203,16 +203,16 @@ input {
 
 /*** animation keyframes ***/
 @-webkit-keyframes tileMovePulse {
-	0% { opacity: 0.5; }
-	100% { opacity: 1; }
+	0% { opacity: 0.3; }
+	100% { opacity: 0.9; }
 }
 @-moz-keyframes tileMovePulse {
-	0% { opacity: 0.5; }
-	100% { opacity: 1; }
+	0% { opacity: 0.3; }
+	100% { opacity: 0.9; }
 }
 @keyframes tileMovePulse {
-	0% { opacity: 0.5; }
-	100% { opacity: 1; }
+	0% { opacity: 0.3; }
+	100% { opacity: 0.9; }
 }
 
 /*** board hills and tiles ***/
@@ -238,7 +238,8 @@ input {
 	border: 2px solid #7CA34D;
 	border-radius: 5px;
 	box-shadow: 1px 1px 2px #7CA34D;
-	cursor: pointer;
+	cursor: pointer !important;
+	opacity: 1;
 }
 .tileActive {
 	background: #FFFFFF;
@@ -253,12 +254,16 @@ input {
 }
 .hillMove, .tileMove {
 	-webkit-animation: tileMovePulse 1s infinite alternate;
-	-moz-animation: tileMovePulse 1s infinite alternate;
+	-moz-animation: tileMovePulse 0.8s infinite alternate;
 	animation: tileMovePulse 1s infinite alternate;
 }
 /* only matches if both classes exist */
 .hillMove.hillDrop, .tileMove.tileDrop {
 	background: #FFCC00;
+	border-color: #CCA300;
+}
+.tileDrop > .tileText {
+	border-color: #CCA300;
 }
 .hillText, .tileText {
 	padding: 5px;

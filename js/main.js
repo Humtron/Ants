@@ -24,7 +24,7 @@ var Ant = {
 			// board randomness
 			tilesHidden: 0,
 			// how many moves per turn by a player
-			movesPerTurn: 1
+			movesPerTurn: 3
 		},
 		ants: {
 			// initial count
@@ -89,6 +89,7 @@ var Ant = {
 		// public hereafter
 		this.type = "tile";
 		this.id = tile.id;
+		this.col = tile.col;
 		this.DOM = {};
 
 		// add all players to local ants array
@@ -111,7 +112,7 @@ Ant.Player.prototype.active = function (bool) {
 Ant.Hill.prototype.bind = function () {
 	// object literal with all DOM bindings
 	this.DOM = {
-		hill: $("#Hill" + this.id),
+		self: $("#Hill" + this.id),
 		dragWorker: $("#Hill" + this.id + " div.iconAnt"),
 		iconWorker: $("#Hill" + this.id + " div.iconAntBlack"),
 		iconFood: $("#Hill" + this.id + " div.iconFood"),
@@ -130,7 +131,7 @@ Ant.Hill.prototype.active = function (bool) {
 
 		// hides without affecting layout
 		if (!this._active) {
-			this.DOM.hill.removeClass("hillActive").addClass("hillInactive");
+			this.DOM.self.removeClass("hillActive").addClass("hillInactive");
 		}
 	}
 	return this._active;
@@ -177,7 +178,7 @@ Ant.Hill.prototype.yielde = function () {
 
 Ant.Hill.prototype.markActive = function (active) {
 	if (active) {
-		this.DOM.hill.addClass("hillActive");
+		this.DOM.self.addClass("hillActive");
 		this.DOM.iconFood.show();
 		this.DOM.iconFoodInactive.hide();
 		this.DOM.iconQueen.show();
@@ -192,7 +193,7 @@ Ant.Hill.prototype.markActive = function (active) {
 			this.DOM.iconWorker.show();
 		}
 	} else {
-		this.DOM.hill.removeClass("hillActive");
+		this.DOM.self.removeClass("hillActive");
 		this.DOM.iconFood.hide();
 		this.DOM.iconFoodInactive.show();
 		this.DOM.iconQueen.hide();
@@ -206,7 +207,7 @@ Ant.Hill.prototype.markActive = function (active) {
 Ant.Tile.prototype.bind = function () {
 	// object literal with all DOM bindings
 	this.DOM = {
-		tile: $("#Tile" + this.id),
+		self: $("#Tile" + this.id),
 		dragWorker: $("#Tile" + this.id + " div.iconAnt"),
 		iconWorker: $("#Tile" + this.id + " div.iconAntBlack"),
 		iconFood: $("#Tile" + this.id + " div.iconFood"),
@@ -222,9 +223,9 @@ Ant.Tile.prototype.active = function (bool) {
 
 		// hides without affecting layout
 		if (!this._active) {
-			this.DOM.tile.css("visibility", "hidden");
+			this.DOM.self.css("visibility", "hidden");
 		} else {
-			this.DOM.tile.css("visibility", "visible");
+			this.DOM.self.css("visibility", "visible");
 		}
 	}
 	return this._active;
@@ -311,11 +312,11 @@ Ant.Tile.prototype.yielde = function (player, options) {
 
 Ant.Tile.prototype.markActive = function (active) {
 	if (active) {
-		this.DOM.tile.addClass("tileActive");
+		this.DOM.self.addClass("tileActive");
 		this.DOM.iconFood.show();
 		this.DOM.iconFoodInactive.hide();
 	} else {
-		this.DOM.tile.removeClass("tileActive");
+		this.DOM.self.removeClass("tileActive");
 		this.DOM.iconFood.hide();
 		this.DOM.iconFoodInactive.show();
 	}
@@ -324,9 +325,9 @@ Ant.Tile.prototype.markActive = function (active) {
 // mark possible move
 Ant.Tile.prototype.markMove = function (active) {
 	if (active) {
-		this.DOM.tile.addClass("tileMove");
+		this.DOM.self.addClass("tileMove");
 	} else {
-		this.DOM.tile.removeClass("tileMove");
+		this.DOM.self.removeClass("tileMove");
 	}
 };
 
@@ -637,6 +638,7 @@ Ant.Board.createTile = function (id, col) {
 	Ant.Board.tiles.push(
 		new Ant.Tile({
 			id: id,
+			col: col,
 			food: food
 		})
 	);
@@ -853,7 +855,7 @@ Ant.Board.create = function () {
 		drop: function (event, ui) {
 			Ant.Board.moveWorkers(ui.draggable, $(this));
 		}
-	});
+	}).droppable("disable");
 	$("div.tile").click(function () {
 		Ant.Board.viewTile(this);
 	});
@@ -997,7 +999,16 @@ Ant.Board.addWorkers = function (numWorkers) {
 };
 
 Ant.Board.startMove = function (draggable) {
-	var from, fromID = Util.cleanNumber(draggable.attr("data-id"));
+	var from, fromID = Util.cleanNumber(draggable.attr("data-id")),
+		leftCol = 0, rightCol = 0,
+		numTiles = 3 * Ant.Board.players.length,
+		marked = [],
+		i = 0;
+
+	// abort if no player moves remaining
+	if (Ant.Turn.move === Ant.Settings.board.movesPerTurn) {
+		return false;
+	}
 
 	// find source
 	// calls to workers() method will overload with player,
@@ -1006,38 +1017,68 @@ Ant.Board.startMove = function (draggable) {
 		from = Ant.Board.hills[fromID];
 	} else {
 		from = Ant.Board.tiles[fromID];
+		leftCol = from.col - 1;
+		rightCol = from.col + 1;
 	}
 
-//console.info("from: ", from);
-
 	if (from.type === "hill") {
-// TODO: calculate starting tiles for each hill
+		// mark all tiles just right of hill
+		Ant.Board.tiles[fromID * 3].markMove(true);
+		Ant.Board.tiles[fromID * 3 + 1].markMove(true);
+		Ant.Board.tiles[fromID * 3 + 2].markMove(true);
 
+		marked.push(fromID * 3);
+		marked.push(fromID * 3 + 1);
+		marked.push(fromID * 3 + 2);
 	} else {
-// TODO: add guards to prevent out of bounds tile IDs
-
-/*
-		// same col: tile +- 1
-		Ant.Board.tiles[fromID - 1].markMove(true);
-		Ant.Board.tiles[fromID + 1].markMove(true);
+		// same col:
+		// guarded on whether from is not first or last in column
+		if (fromID > Ant.Board.tileColumnIDs[from.col].first) {
+			Ant.Board.tiles[fromID - 1].markMove(true);
+			marked.push(fromID - 1);
+		}
+		if (fromID < Ant.Board.tileColumnIDs[from.col].last) {
+			Ant.Board.tiles[fromID + 1].markMove(true);
+			marked.push(fromID + 1);
+		}
 
 		// left col:
-		// tile - (3 * number of players)
-		// tile - (3 * number of players) + 1
-		Ant.Board.tiles[fromID - (3 * Ant.Board.players.length)].markMove(true);
-		Ant.Board.tiles[fromID - (3 * Ant.Board.players.length) + 1].markMove(true);
+		// guarded on whether a left col exists, and marked tiles are in column
+		if (from.col > 0) {
+			if ((fromID - numTiles) >= Ant.Board.tileColumnIDs[from.col - 1].first) {
+				Ant.Board.tiles[fromID - numTiles].markMove(true);
+				marked.push(fromID - numTiles);
+			}
+
+			if ((fromID - numTiles + 1) <= Ant.Board.tileColumnIDs[from.col - 1].last) {
+				Ant.Board.tiles[fromID - numTiles + 1].markMove(true);
+				marked.push(fromID - numTiles + 1);
+			}
+		}
 
 		// right col:
-		// tile + (3 * number of players)
-		// tile + (3 * number of players) - 1
-		Ant.Board.tiles[fromID + (3 * Ant.Board.players.length)].markMove(true);
-		Ant.Board.tiles[fromID + (3 * Ant.Board.players.length) - 1].markMove(true);
-*/
+		// guarded on whether a right col exists, and marked tiles are in column
+		if (rightCol < Ant.Settings.board.tileColumns) {
+			if ((fromID + numTiles - 1) >= Ant.Board.tileColumnIDs[from.col + 1].first) {
+				Ant.Board.tiles[fromID + numTiles - 1].markMove(true);
+				marked.push(fromID + numTiles - 1);
+			}
+
+			if ((fromID + numTiles) <= Ant.Board.tileColumnIDs[from.col + 1].last) {
+				Ant.Board.tiles[fromID + numTiles].markMove(true);
+				marked.push(fromID + numTiles);
+			}
+		}
+	}
+
+	// enable droppable on all marked tiles
+	for (i = 0; i < marked.length; i++) {
+		Ant.Board.tiles[marked[i]].DOM.self.droppable("enable");
 	}
 };
 
 Ant.Board.stopMove = function (draggable) {
-	$("div.tileMove").removeClass("tileMove");
+	$("div.tileMove").removeClass("tileMove").droppable("disable");
 };
 
 Ant.Board.moveWorkers = function (draggable, droppable) {
@@ -1048,6 +1089,21 @@ Ant.Board.moveWorkers = function (draggable, droppable) {
 		toWorkers = 0,
 		toOldYield = 0, toNewYield = 0,
 		yielde = 0;
+
+	// abort if no player moves remaining
+	if (Ant.Turn.move === Ant.Settings.board.movesPerTurn) {
+		Util.yetiDelete();
+		Util.yetiAdd("<h3>Wouldn't it be nice to keep moving your ants forever?</h3>" +
+			"<i>You don't have any moves left this turn.</i><br><br>" +
+			"<input id='PlayerSubmit' type='button' value='Okay, got it'>"
+		);
+
+		$("#PlayerSubmit").click(function () {
+			Util.yetiDelete();
+		});
+	
+		return false;
+	}
 
 	// find source
 	// calls to workers() method will overload with player,
@@ -1077,21 +1133,6 @@ Ant.Board.moveWorkers = function (draggable, droppable) {
 		(to.type === "hill" && to.id !== Ant.Turn.player) ||
 		(to.type === "tile" && to.active() === false) ||
 		(fromWorkers < 1)) {
-		return false;
-	}
-
-	// abort if no player moves remaining
-	if (Ant.Turn.move === Ant.Settings.board.movesPerTurn) {
-		Util.yetiDelete();
-		Util.yetiAdd("<h3>Wouldn't it be nice to keep moving your ants forever?</h3>" +
-			"<i>You don't have any moves left this turn.</i><br><br>" +
-			"<input id='PlayerSubmit' type='button' value='Okay, got it'>"
-		);
-
-		$("#PlayerSubmit").click(function () {
-			Util.yetiDelete();
-		});
-	
 		return false;
 	}
 
@@ -1218,9 +1259,10 @@ Ant.Board.viewTile = function (tile) {
 	Util.yetiDelete();
 	Util.yetiAdd("<h3>Tile demographic</h3>" +
 		"<div id='PlayerDemographic'></div><br>" +
-		"<input id='PlayerSubmit' type='button' value='Swarm workers'>" +
 		"<span id='PlayerCancel' class='spanLink'>Close</span>"
 	);
+
+//"<input id='PlayerSubmit' type='button' value='Swarm workers'>" +
 
 	if (t.workers() > 0) {
 		// show workers and yield for each player
@@ -1268,6 +1310,7 @@ Ant.Board.viewTile = function (tile) {
 		$("#PlayerDemographic").html("<i>No ants have colonized this area yet.</i>");
 	}
 
+/*
 	// only show submit if current player has hill workers, and 
 	// player has moves remaining
 	if (Ant.Board.hills[Ant.Turn.player].workers() > 0 && Ant.Turn.move < Ant.Settings.board.movesPerTurn) {
@@ -1277,6 +1320,7 @@ Ant.Board.viewTile = function (tile) {
 	} else {
 		$("#PlayerSubmit").hide();
 	}
+*/
 
 	$("#PlayerCancel").click(function () {
 		Util.yetiDelete();
@@ -1632,7 +1676,7 @@ Ant.Turn.gameOver = function (player) {
 
 
 // TODO: replace dragWorkers and iconWorkers with simple class swap, and queens, and food
-// TODO: replace this.DOM.hill and this.DOM.tile with this.DOM.self
+// TODO: don't allow current player to drag if no moves remaining
 
 var Util = {
 	// improved typeof (far more specific)
