@@ -786,7 +786,9 @@ Ant.Board.create = function () {
 		// clones and appends to body to allow draggable to move outside
 		// without slipping behind the containing div
 		helper: function () {
-			return $(this).clone().appendTo("body").css("zIndex", 10).show();
+			return $(this).clone().appendTo("body")
+				.addClass("iconDragging")
+				.show();
 		},
 		start: function (event, ui) {
 			Ant.Board.startMove($(this));
