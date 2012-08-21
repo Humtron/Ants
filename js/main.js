@@ -44,7 +44,7 @@ var Ant = {
 			// random range of food in each tile
 			range: 15,
 			// weight of tile placement (more distant columns should have more food)
-			weight: 0.6
+			weight: 8
 		}
 	},
 	Player: function (player) {
@@ -113,12 +113,7 @@ Ant.Hill.prototype.bind = function () {
 	// object literal with all DOM bindings
 	this.DOM = {
 		self: $("#Hill" + this.id),
-		dragWorker: $("#Hill" + this.id + " div.iconAnt"),
-		iconWorker: $("#Hill" + this.id + " div.iconAntBlack"),
-		iconFood: $("#Hill" + this.id + " div.iconFood"),
-		iconFoodInactive: $("#Hill" + this.id + " div.iconFoodBlack"),
-		iconQueen: $("#Hill" + this.id + " div.iconQueen"),
-		iconQueenInactive: $("#Hill" + this.id + " div.iconQueenBlack"),
+		dragWorker: $("#Hill" + this.id + " div.hillWorkers"),
 		food: $("#Hill" + this.id + "Food"),
 		queens: $("#Hill" + this.id + "Queens"),
 		workers: $("#Hill" + this.id + "Workers")
@@ -159,13 +154,11 @@ Ant.Hill.prototype.workers = function (num) {
 		this._workers = num;
 		this.DOM.workers.text(num);
 
-		// show draggable if workers exist
+		// enable draggable if workers exist
 		if (this._workers > 0) {
-			this.DOM.dragWorker.show();
-			this.DOM.iconWorker.hide();
+			this.DOM.dragWorker.draggable("enable");
 		} else {
-			this.DOM.dragWorker.hide();
-			this.DOM.iconWorker.show();
+			this.DOM.dragWorker.draggable("disable");
 		}
 	}
 
@@ -179,27 +172,18 @@ Ant.Hill.prototype.yielde = function () {
 Ant.Hill.prototype.markActive = function (active) {
 	if (active) {
 		this.DOM.self.addClass("hillActive");
-		this.DOM.iconFood.show();
-		this.DOM.iconFoodInactive.hide();
-		this.DOM.iconQueen.show();
-		this.DOM.iconQueenInactive.hide();
+		this.DOM.workers.removeClass("spanGray").addClass("spanYellow");
 
-		// show draggable if workers exist
+		// enable draggable if workers exist
 		if (this._workers > 0) {
-			this.DOM.dragWorker.show();
-			this.DOM.iconWorker.hide();
+			this.DOM.dragWorker.draggable("enable");
 		} else {
-			this.DOM.dragWorker.hide();
-			this.DOM.iconWorker.show();
+			this.DOM.dragWorker.draggable("disable");
 		}
 	} else {
 		this.DOM.self.removeClass("hillActive");
-		this.DOM.iconFood.hide();
-		this.DOM.iconFoodInactive.show();
-		this.DOM.iconQueen.hide();
-		this.DOM.iconQueenInactive.show();
-		this.DOM.dragWorker.hide();
-		this.DOM.iconWorker.show();
+		this.DOM.workers.removeClass("spanYellow").addClass("spanGray");
+		this.DOM.dragWorker.draggable("disable");
 	}
 };
 
@@ -209,11 +193,10 @@ Ant.Tile.prototype.bind = function () {
 	this.DOM = {
 		self: $("#Tile" + this.id),
 		dragWorker: $("#Tile" + this.id + " div.iconAnt"),
-		iconWorker: $("#Tile" + this.id + " div.iconAntBlack"),
-		iconFood: $("#Tile" + this.id + " div.iconFood"),
-		iconFoodInactive: $("#Tile" + this.id + " div.iconFoodBlack"),
+		antsWrapper: $("#Tile" + this.id + " div.tileAnts"),
 		food: $("#Tile" + this.id + "Food"),
-		ants: $("#Tile" + this.id + "Ants")
+		ants: $("#Tile" + this.id + "Ants"),
+		total: $("#Tile" + this.id + "AntsTotal")
 	};
 };
 
@@ -245,25 +228,25 @@ Ant.Tile.prototype.workers = function (num, player) {
 		if (Util.getType(num) === "number") {
 			// update total (new minus old)
 			this._workersTotal += num - this._ants[player].workers;
-			this.DOM.ants.text(this._workersTotal);
-			
 			this._ants[player].workers = num;
+
+			this.DOM.ants.text(this._ants[player].workers);
+			this.DOM.total.text(this._workersTotal);
 
 			// if no workers, hide worker display, and mark inactive
 			if (this._workersTotal < 1) {
-				$(this.DOM.dragWorker[0].parentNode).hide();
+				this.DOM.antsWrapper.hide();
+				this.DOM.dragWorker.hide();
 				this.markActive(false);
 			} else {
-				$(this.DOM.dragWorker[0].parentNode).show();
+				this.DOM.antsWrapper.show();
 
 				// show draggable if workers exist, and player is current player, and mark active
 				if (this._ants[player].workers > 0 && player === Ant.Turn.player) {
 					this.DOM.dragWorker.show();
-					this.DOM.iconWorker.hide();
 					this.markActive(true);
 				} else {
 					this.DOM.dragWorker.hide();
-					this.DOM.iconWorker.show();
 					this.markActive(false);
 				}
 			}
@@ -313,12 +296,8 @@ Ant.Tile.prototype.yielde = function (player, options) {
 Ant.Tile.prototype.markActive = function (active) {
 	if (active) {
 		this.DOM.self.addClass("tileActive");
-		this.DOM.iconFood.show();
-		this.DOM.iconFoodInactive.hide();
 	} else {
 		this.DOM.self.removeClass("tileActive");
-		this.DOM.iconFood.hide();
-		this.DOM.iconFoodInactive.show();
 	}
 };
 
@@ -345,30 +324,30 @@ Ant.DOM.bind = function () {
 };
 
 Ant.DOM.bindQtip = function () {
-	var settings = {
-		style: {
-			name: "dark",
-			tip: "bottomMiddle"
-		},
-		position: {
-			corner: {
-				target: "topMiddle",
-				tooltip: "bottomMiddle"
-			}
-		}
-	};
-
+//	var settings = {
+//		style: {
+//			name: "dark",
+//			tip: "bottomMiddle"
+//		},
+//		position: {
+//			corner: {
+//				target: "topMiddle",
+//				tooltip: "bottomMiddle"
+//			}
+//		}
+//	};
+//
 	// only make new qtips where necessary,
 	// because qtip get confused when bound more
 	// than once to an element, and $(el).qtip("destroy")
 	// will throw an error if qtip does not exist already
-	$("div[title], input[title], li[title]").each(function () {
-		var that = $(this);
-
-		if (!that.data("qtip")) {
-			that.qtip(settings);
-		}
-	});
+//	$("div[title], input[title], li[title]").each(function () {
+//		var that = $(this);
+//
+//		if (!that.data("qtip")) {
+//			that.qtip(settings);
+//		}
+//	});
 };
 
 Ant.Board.reset = function () {
@@ -412,7 +391,7 @@ Ant.Board.promptPlayers = function (numPlayers) {
 		"<input id='PlayerFoodMin' type='text' size='5' value='" + Ant.Settings.food.min + "'></li>" +
 		"<li title='Random range of food in each tile'><label for='PlayerFoodRange'>Range</label>" +
 		"<input id='PlayerFoodRange' type='text' size='5' value='" + Ant.Settings.food.range + "'></li>" +
-		"<li title='Weight of tile placement (more distant tiles have more food)'><label for='PlayerFoodWeight'>Weight</label>" +
+		"<li title='Weight of tile placement (higher means more distant tiles have more food)'><label for='PlayerFoodWeight'>Weight</label>" +
 		"<input id='PlayerFoodWeight' type='text' size='5' value='" + Ant.Settings.food.weight + "'></li>" +
 		"</ul>" +
 		"</fieldset>" +
@@ -554,14 +533,8 @@ Ant.Board.createHill = function (id) {
 									" ",
 									Util.el("div", {
 										attr: [
-											["title", "Cake. Delicious. Don't run out."],
+											["title", "Cake. Delicious."],
 											["class", "iconFood"]
-										]
-									}),
-									Util.el("div", {
-										attr: [
-											["title", "Cake. Not yours."],
-											["class", "iconFoodBlack"]
 										]
 									})
 								]
@@ -581,14 +554,8 @@ Ant.Board.createHill = function (id) {
 									" ",
 									Util.el("div", {
 										attr: [
-											["title", "Queens. Can't live without 'em."],
+											["title", "Queens. Precious."],
 											["class", "iconQueen"]
-										]
-									}),
-									Util.el("div", {
-										attr: [
-											["title", "Queens. Not yours."],
-											["class", "iconQueenBlack"]
 										]
 									})
 								]
@@ -596,28 +563,26 @@ Ant.Board.createHill = function (id) {
 						]
 					}),
 					Util.el("div", {
-						attr: [["class", "hillWorkers"]],
+						attr: [["class", "hillWorkersWrapper"]],
 						children: [
-							Util.el("span", {
-								attr: [["class", "hillWrapper"]],
+							Util.el("div", {
+								attr: [
+									["data-id", id],
+									["data-type", "hill"],
+									["title", "Workers (drag to swarm)"],
+									["class", "hillWorkers"]
+								],
 								children: [
-									Util.el("span", {
-										attr: [["id", "Hill" + id + "Workers"]],
-										children: [Ant.Settings.ants.workers]
-									}),
-									" ",
 									Util.el("div", {
-										attr: [
-											["data-id", id],
-											["data-type", "hill"],
-											["title", "Workers (drag to swarm)"],
-											["class", "iconAnt"]
-										]
-									}),
-									Util.el("div", {
-										attr: [
-											["title", "Workers"],
-											["class", "iconAntBlack"]
+										attr: [["class", "hillWorkersText"]],
+										children: [
+											Util.el("span", {
+												attr: [
+													["id", "Hill" + id + "Workers"],
+													["class", "spanGray"]
+												],
+												children: [Ant.Settings.ants.workers]
+											})
 										]
 									})
 								]
@@ -634,6 +599,9 @@ Ant.Board.createTile = function (id, col) {
 	// random food weighted by tile's column
 	var food = Ant.Settings.food.min + 
 		Math.floor((Math.random() * Ant.Settings.food.range) + (col * Ant.Settings.food.weight));
+
+	// upper bound
+	if (food > 999) food = 999;
 
 	Ant.Board.tiles.push(
 		new Ant.Tile({
@@ -659,20 +627,15 @@ Ant.Board.createTile = function (id, col) {
 							Util.el("span", {
 								attr: [["id", "Tile" + id + "Food"]],
 								children: [food]
-							}),
-							" ",
-							Util.el("div", {
-								attr: [
-									["title", "Cake. Delicious. Let's have some."],
-									["class", "iconFood"]
-								]
-							}),
-							Util.el("div", {
-								attr: [
-									["title", "Cake. Delicious. Mysterious."],
-									["class", "iconFoodBlack"]
-								]
 							})
+						]
+					}),
+					Util.el("div", {
+						attr: [
+							["data-id", id],
+							["data-type", "tile"],
+							["title", "Workers (drag to swarm)"],
+							["class", "iconAnt hide"]
 						]
 					}),
 					Util.el("div", {
@@ -682,20 +645,10 @@ Ant.Board.createTile = function (id, col) {
 								attr: [["id", "Tile" + id + "Ants"]],
 								children: [0]
 							}),
-							" ",
-							Util.el("div", {
-								attr: [
-									["data-id", id],
-									["data-type", "tile"],
-									["title", "Workers (drag to swarm)"],
-									["class", "iconAnt"]
-								]
-							}),
-							Util.el("div", {
-								attr: [
-									["title", "Workers"],
-									["class", "iconAntBlack"]
-								]
+							"/",
+							Util.el("span", {
+								attr: [["id", "Tile" + id + "AntsTotal"]],
+								children: [0]
 							})
 						]
 					})
@@ -779,7 +732,6 @@ Ant.Board.create = function () {
 		Ant.DOM.Hills.append(Ant.Board.createHill(i));
 		Ant.Board.hills[i].bind();
 		Ant.Board.hills[i].markActive(false);
-		Ant.Board.hills[i].DOM.dragWorker.hide();
 	}
 
 	// create columns of tiles, left to right
@@ -819,19 +771,18 @@ Ant.Board.create = function () {
 	for (i = 0; i < Ant.Board.tiles.length; i++) {
 		Ant.Board.tiles[i].bind();
 		Ant.Board.tiles[i].markActive(false);
-		Ant.Board.tiles[i].DOM.dragWorker.hide();
 	}
 
 	// randomize tiles to freshen board
 	Ant.Board.createRandomTiles(numTiles);
 
 	// bind all draggables and droppables for moving ants
-	$("div.iconAnt").draggable({
+	$("div.hillWorkers, div.iconAnt").draggable({
 		cursor: "move",
 		containment: "#Board",
-		snap: "div.hill, div.tile",
+		snap: "div.tile",
 		snapMode: "inner",
-		snapTolerance: 10,
+		snapTolerance: 5,
 		// clones and appends to body to allow draggable to move outside
 		// without slipping behind the containing div
 		helper: function () {
@@ -844,6 +795,7 @@ Ant.Board.create = function () {
 			Ant.Board.stopMove($(this));
 		}
 	});
+	$("div.hillWorkers").draggable("disable");
 	$("div.hill").droppable({
 		hoverClass: "hillDrop",
 		drop: function (event, ui) {
@@ -1488,12 +1440,12 @@ Ant.Turn.updatePlayer = function () {
 		// show draggable worker on tile if workers exist, and mark active
 		if (Ant.Board.tiles[i].workers(null, Ant.Turn.player) > 0) {
 			Ant.Board.tiles[i].markActive(true);
+			Ant.Board.tiles[i].DOM.ants.text(Ant.Board.tiles[i].workers(null, Ant.Turn.player));
 			Ant.Board.tiles[i].DOM.dragWorker.show();
-			Ant.Board.tiles[i].DOM.iconWorker.hide();
 		} else {
 			Ant.Board.tiles[i].markActive(false);
+			Ant.Board.tiles[i].DOM.ants.text(0);
 			Ant.Board.tiles[i].DOM.dragWorker.hide();
-			Ant.Board.tiles[i].DOM.iconWorker.show();
 		}
 	}
 
@@ -1675,8 +1627,10 @@ Ant.Turn.gameOver = function (player) {
 };
 
 // TODO: allow moving north - south to make circular board
-// TODO: replace dragWorkers and iconWorkers with simple class swap, and queens, and food
 // TODO: don't allow current player to drag if no moves remaining
+// TODO: fix plurality of move/moves on turn bar
+// TODO: fix yeti horizontal alignment
+// TODO: shrink hills horizontally, expand tiles horizontally
 
 var Util = {
 	// improved typeof (far more specific)

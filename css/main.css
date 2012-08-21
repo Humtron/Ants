@@ -147,10 +147,11 @@ input {
 
 /*** text ***/
 .spanGreen, .spanRed, .spanGray, .spanGrayLight, .spanYellow {
-	border-radius: 5px;
-	padding: 4px 5px;
+	padding: 3px 5px;
 	color: #FFFFFF;
 	font-weight: bold;
+	border-radius: 5px;
+	box-shadow: 1px 1px 1px #999999;
 }
 .spanGreen { background: #7CA34D; }
 .spanRed { background: #AA0000; }
@@ -261,32 +262,42 @@ input {
 	box-shadow: none;
 	opacity: 0.3;
 }
-.hillText, .tileText {
-	padding: 5px;
-}
 .hillText {
 	color: #666666;
 }
 .tileText {
-	border: 2px solid #9AC775;
-	color: #333333;
-	height: 36px;
+	padding: 0 0 3px 0;
 }
 .hillName {
-	padding: 0 5px 5px 5px;
 	border-radius: 5px;
-	height: 22px;
+	margin-bottom: 5px;
+	padding: 3px 10px;
 	text-shadow: 1px 1px 2px #CCCCCC;
 }
 .hillName, .tileFood {
 	overflow: hidden;
-	font: 20px Arial, Helvetica, sans-serif;
+	font-size: 20px;
 }
-.hillFood, .hillQueens, .hillWorkers {
-	margin: 5px 10px;
+.hillFood, .hillQueens {
+	margin-bottom: 5px;
 	padding: 5px;
 	text-shadow: 1px 1px 2px #CCCCCC;
-	font: 20px Arial, Helvetica, sans-serif;
+	font-size: 20px;
+}
+
+.hillWorkersWrapper {
+	padding: 10px 0px 0px 10px;
+}
+.hillWorkers {
+	float: left;
+	background: url("../images/ant-hill.jpg") no-repeat scroll 0 0 transparent;
+	font-size: 20px;
+	height: 45px;
+	width: 75px;
+	cursor: move;
+}
+.hillWorkersText {
+	margin: -5px 0px 0px -5px;
 }
 .hillWrapper {
 	background: none repeat scroll 0 0 rgba(255, 255, 255, 0.6);
@@ -303,22 +314,27 @@ input {
 	color: #333333;	
 }
 .hillActive .hillName, .hillActive .hillFood, 
-.hillActive .hillQueens, .hillActive .hillWorkers {
+.hillActive .hillQueens {
 	font-weight: bold;
 }
 .tileFood {
+	float: right;
+	background: none repeat scroll 0 0 #7CA34D;
+	border-radius: 0 0 0 6px;
+	box-shadow: 0 0 2px #7CA34D;
 	height: 20px;
+	padding: 4px 3px 1px 4px;
+	font-size: 18px;
 	line-height: 16px;
-	color: #003300;
-	text-shadow: 1px 1px 1px #7CA34D;
+	color: #FFFFFF;
 }
 .tileAnts {
-	margin: 0 0 0 3px;
-	font: 16px Arial, Helvetica, sans-serif;
-	text-shadow: 1px 1px 1px #AAAAAA;
+	clear: both;
+	padding: 3px 0 0 5px;
+	font: 16px/14px Arial, Helvetica, sans-serif;
 }
-.tileActive .tileText {
-	border-color: #FFFFFF;
+.tileAnts span:first-child {
+	font-weight: bold;
 }
 .hillMove, .tileMove {
 	-webkit-animation: tileMovePulse 1s infinite alternate;
@@ -330,43 +346,32 @@ input {
 	background: #FFCC00;
 	border-color: #CCA300;
 }
-.tileDrop > .tileText {
-	border-color: #CCA300;
-}
 
 /*** icons ***/
-.iconFoodBlack, .iconFood {
+.iconFood {
 	display: inline-block;
 	height: 15px;
 	width: 16px;	
-}
-.iconFoodBlack {
 	background-image: url("../images/cake-black.png");
 }
-.iconFood {
-	background-image: url("../images/cake.png");
-}
-
-.iconAntBlack, .iconAnt, .iconQueenBlack, .iconQueen {
+.iconQueen {
 	display: inline-block;
 	height: 12px;
 	width: 28px;
-}
-.iconAntBlack {
-	background-image: url("../images/ant-black.png");
+	background-image: url("../images/ant-queen.png");
 }
 .iconAnt {
-	background-image: url("../images/ant-gold.png");
+	float: left;
+	height: 30px;
+	width: 38px;
+	background-image: url("../images/ant-tile.jpg");
 	cursor: move;
-}
-.iconQueenBlack {
-	background-image: url("../images/ant-black.png");
-}
-.iconQueen {
-	background-image: url("../images/ant-queen.png");
 }
 
 /*** jQuery ***/
+.ui-state-disabled {
+	opacity: 1;
+}
 a.ui-slider-handle {
 	text-decoration: none;
 	text-align: center;
