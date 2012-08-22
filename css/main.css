@@ -302,7 +302,7 @@ input {
 	margin: -5px 0 0 5px;
 }
 .hillWrapper {
-	background: none repeat scroll 0 0 rgba(255, 255, 255, 0.6);
+	background: none repeat scroll 0 0 rgba(255, 255, 255, 0.5);
 	padding: 4px 5px;
 	border-radius: 5px;
 }
@@ -311,6 +311,9 @@ input {
 }
 .hillInactive .hillText {
 	color: #666666;	
+}
+.hillActive .hillWrapper {
+	background: none repeat scroll 0 0 rgba(255, 255, 255, 0.7);
 }
 .hillActive .hillText {
 	color: #333333;	
@@ -353,15 +356,15 @@ input {
 /*** icons ***/
 .iconFood {
 	display: inline-block;
-	height: 15px;
+	height: 16px;
 	width: 16px;	
 	background-image: url("../images/cake-black.png");
 }
 .iconQueen {
 	display: inline-block;
-	height: 12px;
-	width: 28px;
-	background-image: url("../images/ant-queen.png");
+	height: 16px;
+	width: 16px;
+	background-image: url("../images/crown-black.png");
 }
 .iconAnt {
 	float: left;
