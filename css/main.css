@@ -347,10 +347,22 @@ input {
 	-moz-animation: tileMovePulse 0.8s infinite alternate;
 	animation: tileMovePulse 1s infinite alternate;
 }
-/* only matches if both classes exist */
-.hillMove.hillDrop, .tileMove.tileDrop {
+.tileMove {
 	background: #FFCC00;
 	border-color: #CCA300;
+}
+.tileMove .tileFood {
+	background: none repeat scroll 0 0 #CCA300;
+	box-shadow: 0 0 2px #CCA300;
+}
+/* only matches if both classes exist */
+.hillMove.hillDrop, .tileMove.tileDrop {
+	background: #DDDDDD;
+	border-color: #AAAAAA;
+}
+.tileDrop .tileFood {
+	background: none repeat scroll 0 0 #AAAAAA;
+	box-shadow: 0 0 2px #CCCCCC;
 }
 
 /*** icons ***/
