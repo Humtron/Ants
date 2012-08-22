@@ -333,10 +333,11 @@ input {
 .tileAnts {
 	clear: both;
 	padding: 3px 0 0 5px;
-	font: 16px/14px Arial, Helvetica, sans-serif;
+	font: bold 16px/14px Arial, Helvetica, sans-serif;
+	color: #999999;
 }
 .tileAnts span:first-child {
-	font-weight: bold;
+	color: #000000;
 }
 .hillMove, .tileMove {
 	-webkit-animation: tileMovePulse 1s infinite alternate;

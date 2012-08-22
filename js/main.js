@@ -645,7 +645,7 @@ Ant.Board.createTile = function (id, col) {
 								attr: [["id", "Tile" + id + "Ants"]],
 								children: [0]
 							}),
-							"/",
+							" / ",
 							Util.el("span", {
 								attr: [["id", "Tile" + id + "AntsTotal"]],
 								children: [0]
