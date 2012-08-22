@@ -5,6 +5,10 @@
 Hosted at Cloud9, in active development:
 [Play prototype](https://c9.io/humtron/ants/workspace/index.htm)
 
+## How to play
+
+[Tutorial](/Humtron/Ants/blob/master/Tutorial.md)
+
 ## Performance
 
-[View performance analysis](/Humtron/Ants/blob/master/Performance.md)
+[Performance analysis](/Humtron/Ants/blob/master/Performance.md)
