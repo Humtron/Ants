@@ -186,7 +186,7 @@ input {
 	padding: 10px;
 	margin-bottom: 20px;
 	font-size: 15px;
-	box-shadow: 2px 2px 5px #999999;
+	box-shadow: 1px 1px 2px #999999;
 }
 #Hills, #Tiles {
 	float: left;
@@ -255,7 +255,6 @@ input {
 }
 .hillActive {
 	opacity: 1;
-	box-shadow: 2px 2px 4px #666666;
 }
 .hillInactive {
 	background: #BBBBBB;
