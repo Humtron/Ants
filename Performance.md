@@ -16,19 +16,26 @@ for (var i = 0; i < 100000; i++) {
 console.info("Time: ", ((new Date()) - uTime) + "ms");
 </code></pre>
 
-Prototype average: 560 ms
-Module average: 790 ms
+Prototype:
+
+-	Average: 560 ms
+
+Module:
+
+-	Average: 790 ms
 
 ## Memory usage
 
 With module pattern, every function on an Ant.Tile is repeatedly declared inside the tile object.  This wastes memory in a linear fashion.  With prototype pattern, only the data specific to a tile exists in the tile object, and all functions are declared on the tile's prototype.  When running the timer above to create 100,000 tiles, the following memory usage occurred:
 
 Prototype:
-	Total memory: 29.75 MB
-	GC heap: 26 MB
-	Objects: 2 MB
+
+-	Total memory: 29.75 MB
+-	GC heap: 26 MB
+-	Objects: 2 MB
 
 Module: 
-	Total memory: 123 MB
-	GC heap: 95 MB
-	Objects: 26.5 MB
+
+-	Total memory: 123 MB
+-	GC heap: 95 MB
+-	Objects: 26.5 MB
