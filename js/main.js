@@ -15,6 +15,11 @@ var Ant = {
 	},
 	Settings: {
 		board: {
+			// tile backgrounds
+			tileBackgrounds: [
+				"tileMoss",
+				"tileMoss2"
+			],
 			// how many tiles to offset odd columns
 			// and how many less tiles odd columns will have
 			tileOffset: 1,
@@ -235,10 +240,12 @@ Ant.Tile.prototype.workers = function (num, player) {
 
 			// if no workers, hide worker display, and mark inactive
 			if (this._workersTotal < 1) {
+				this.DOM.self.removeClass("tileColonized");
 				this.DOM.antsWrapper.hide();
 				this.DOM.dragWorker.hide();
 				this.markActive(false);
 			} else {
+				this.DOM.self.addClass("tileColonized");
 				this.DOM.antsWrapper.show();
 
 				// show draggable if workers exist, and player is current player, and mark active
@@ -316,6 +323,7 @@ Ant.DOM.bind = function () {
 	Ant.DOM.Turn = $("#Turn");
 	//Ant.DOM.Player = $("#Player");
 	Ant.DOM.Moves = $("#Moves");
+	Ant.DOM.MovesPlural = $("#MovesPlural");
 	Ant.DOM.Upkeep = $("#Upkeep");
 	Ant.DOM.Yielde = $("#Yielde");
 	Ant.DOM.Board = $("#Board");
@@ -598,7 +606,9 @@ Ant.Board.createHill = function (id) {
 Ant.Board.createTile = function (id, col) {
 	// random food weighted by tile's column
 	var food = Ant.Settings.food.min + 
-		Math.floor((Math.random() * Ant.Settings.food.range) + (col * Ant.Settings.food.weight));
+		Math.floor((Math.random() * Ant.Settings.food.range) + (col * Ant.Settings.food.weight)),
+		// random background
+		bg = Math.floor(Math.random() * Ant.Settings.board.tileBackgrounds.length);
 
 	// upper bound
 	if (food > 999) food = 999;
@@ -615,7 +625,7 @@ Ant.Board.createTile = function (id, col) {
 		attr: [
 			["id", "Tile" + id],
 			["data-id", id],
-			["class", "tile"]
+			["class", "tile " + Ant.Settings.board.tileBackgrounds[bg]]
 		],
 		children: [
 			Util.el("div", {
@@ -987,13 +997,21 @@ Ant.Board.startMove = function (draggable) {
 	} else {
 		// same col:
 		// guarded on whether from is not first or last in column
+		// if first, set to last, or vice versa, to create "round" board
 		if (fromID > Ant.Board.tileColumnIDs[from.col].first) {
 			Ant.Board.tiles[fromID - 1].markMove(true);
 			marked.push(fromID - 1);
+		} else {
+			Ant.Board.tiles[Ant.Board.tileColumnIDs[from.col].last].markMove(true);
+			marked.push(Ant.Board.tileColumnIDs[from.col].last);
 		}
+
 		if (fromID < Ant.Board.tileColumnIDs[from.col].last) {
 			Ant.Board.tiles[fromID + 1].markMove(true);
 			marked.push(fromID + 1);
+		} else {
+			Ant.Board.tiles[Ant.Board.tileColumnIDs[from.col].first].markMove(true);
+			marked.push(Ant.Board.tileColumnIDs[from.col].first);
 		}
 
 		// left col:
@@ -1216,8 +1234,6 @@ Ant.Board.viewTile = function (tile) {
 		"<span id='PlayerCancel' class='spanLink'>Close</span>"
 	);
 
-//"<input id='PlayerSubmit' type='button' value='Swarm workers'>" +
-
 	if (t.workers() > 0) {
 		// show workers and yield for each player
 		for (var i = 0; i < Ant.Board.players.length; i++) {
@@ -1263,18 +1279,6 @@ Ant.Board.viewTile = function (tile) {
 	} else {
 		$("#PlayerDemographic").html("<i>No ants have colonized this area yet.</i>");
 	}
-
-/*
-	// only show submit if current player has hill workers, and 
-	// player has moves remaining
-	if (Ant.Board.hills[Ant.Turn.player].workers() > 0 && Ant.Turn.move < Ant.Settings.board.movesPerTurn) {
-		$("#PlayerSubmit").click(function () {
-			Ant.Board.moveWorkers(Ant.Board.hills[Ant.Turn.player].DOM.dragWorker, $(tile));
-		});
-	} else {
-		$("#PlayerSubmit").hide();
-	}
-*/
 
 	$("#PlayerCancel").click(function () {
 		Util.yetiDelete();
@@ -1377,6 +1381,7 @@ Ant.Turn.nextMove = function () {
 	move = Ant.Settings.board.movesPerTurn - Ant.Turn.move;
 
 	Ant.DOM.Moves.text(move);
+	Ant.DOM.MovesPlural.text((move === 1) ? "move" : "moves");
 
 	if (move > 0) {
 		Ant.DOM.Moves.removeClass("spanGrayLight").addClass("spanGray");
@@ -1450,9 +1455,6 @@ Ant.Turn.updatePlayer = function () {
 			Ant.Board.tiles[i].DOM.dragWorker.hide();
 		}
 	}
-
-	// update current player's name
-	//Ant.DOM.Player.text(Ant.Board.players[Ant.Turn.player].name);
 
 	// reset player moves
 	Ant.Turn.move = -1;
@@ -1628,11 +1630,12 @@ Ant.Turn.gameOver = function (player) {
 	});
 };
 
-// TODO: allow moving north - south to make circular board
 // TODO: don't allow current player to drag if no moves remaining
-// TODO: fix plurality of move/moves on turn bar
-// TODO: fix yeti horizontal alignment
-// TODO: shrink hills horizontally, expand tiles horizontally
+// TODO: add flippable hills for more data visualization
+
+
+
+
 
 var Util = {
 	// improved typeof (far more specific)
@@ -1709,7 +1712,7 @@ var Util = {
 		Util.yetiAddBackground();
 
 		// set defaults
-		uWidth = 560;
+		uWidth = 570;
 
 		// create yeti element
 		yetiDiv = document.createElement("div");
@@ -1717,7 +1720,7 @@ var Util = {
 		yetiDiv.style.width = uWidth + "px";
 
 		// include CSS padding/border width from master.css!
-		findX = $(document).scrollLeft() + ($(window).width() / 2) - (uWidth / 2) - (16 / 2) - (10 / 2);
+		findX = $(document).scrollLeft() + ($(window).width() / 2) - (uWidth / 2) - (10 / 2) - (10 / 2);
 		findY = $(document).scrollTop() + 100;
 
 		// add yeti content
