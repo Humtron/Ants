@@ -354,7 +354,8 @@ input {
 	border-radius: 0 0 0 6px;
 	box-shadow: 0 0 2px #7CA34D;
 	height: 20px;
-	padding: 4px 3px 1px 4px;
+	margin: -1px -1px 0 0;
+	padding: 5px 4px 1px 4px;
 	font-size: 18px;
 	line-height: 16px;
 	color: #FFFFFF;
@@ -427,25 +428,27 @@ input {
 }
 
 /*** dark theme ***/
-body {
+body.dark {
 	background-color: #444444;
 }
-h1 {
+body.dark h1 {
 	color: #CCCCCC;
 	text-shadow: none;
 }
-#Meta .spanLink {
+body.dark #Meta, body.dark #Meta .spanLink {
 	color: #FFFFFF;
 }
-#Turn {
+body.dark #Turn {
 	background-color: #333333;
 	box-shadow: none;
 	color: #FFFFFF;
 }
-.spanGreen, .spanRed, .spanGray, .spanGrayLight, .spanYellow {
+body.dark .spanGreen, body.dark .spanRed,
+body.dark .spanGray, body.dark .spanGrayLight,
+body.dark .spanYellow {
 	box-shadow: 1px 1px 1px #666666;
 }
-div.yeti {
+body.dark div.yeti {
 	background-color: #CCCCCC;
 }
 

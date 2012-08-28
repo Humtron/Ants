@@ -17,6 +17,9 @@
 <body>
 	<div id="container">
 		<div id="Meta" style="float:right">
+			<span id="ThemeLight" class="spanLink hide">Light</span>
+			<span id="ThemeDark" class="spanLink">Dark</span>
+			&nbsp;&nbsp;&mdash;&nbsp;&nbsp;
 			<span id="Score" class="spanLink">Scoreboard</span>
 		</div>
 
@@ -78,6 +81,16 @@
 				// update handle
 				$("a.ui-slider-handle").text(ui.value);
 			}
+		});
+		$("#ThemeLight").click(function() {
+			$("body").removeClass("dark");
+			$("#ThemeLight").hide();
+			$("#ThemeDark").show();
+		});
+		$("#ThemeDark").click(function() {
+			$("body").addClass("dark");
+			$("#ThemeLight").show();
+			$("#ThemeDark").hide();
 		});
 		$("#Score").click(function() {
 			Ant.Board.viewScore();
