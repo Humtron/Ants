@@ -34,6 +34,7 @@ h3 {
 	text-shadow: 1px 1px 2px #CCCCCC;
 }
 .hide { display: none; }
+.cloak { visibility: hidden; }
 .clear { clear: both; }
 .marginSlim { margin: 2px; }
 .marginBottomSlim { margin-bottom: 15px; }
@@ -196,10 +197,11 @@ input {
 }
 #Hills {
 	width: 135px;
-	margin-left: 5px;
+	padding: 0 4px;
+	background-color: #DFEAD2;
 }
 #Tiles {
-	margin-left: 5px;
+	margin-left: 4px;
 }
 
 /*** turn display ***/
@@ -242,7 +244,7 @@ input {
 }
 .tile {
 	height: 50px;
-	margin: 5px 2px;
+	margin: 5px 1px;
 	overflow: hidden;
 	background: #7CA34D;
 	background-repeat: no-repeat;
@@ -252,20 +254,23 @@ input {
 	cursor: pointer !important;
 	opacity: 1;
 }
-.tileBranch {
-	background-image: url("../images/tile-branch.png");
-}
-.tileLeaf {
-	background-image: url("../images/tile-leaf.png");
-}
-.tileLeaf2 {
-	background-image: url("../images/tile-leaf2.png");
-}
 .tileMoss {
 	background-image: url("../images/tile-moss.png");
 }
 .tileMoss2 {
 	background-image: url("../images/tile-moss2.png");
+}
+.tileMoss3 {
+	background-image: url("../images/tile-moss3.png");
+}
+.tileMoss4 {
+	background-image: url("../images/tile-moss4.png");
+}
+.tileMoss5 {
+	background-image: url("../images/tile-moss5.png");
+}
+.tileMoss6 {
+	background-image: url("../images/tile-moss6.png");
 }
 .tileColonized {
 	background: #7CA34D;
@@ -306,14 +311,14 @@ input {
 	font-size: 20px;
 }
 .hillWorkersWrapper {
-	padding: 10px 0px 0px 0;
+	padding: 12px 0px 0px 0;
 }
 .hillWorkers {
 	float: left;
-	background: url("../images/ant-hill.jpg") no-repeat scroll 0 0 transparent;
+	background: url("../images/ant-hill.png") no-repeat scroll 0 0 rgba(255, 255, 255, 0.5);
 	font-size: 20px;
-	height: 44px;
-	width: 75px;
+	height: 42px;
+	width: 50px;
 	border: 2px solid #AAAAAA;
 	border-width: 1px 1px 0 0;
 	border-radius: 0 10px 0 0;
@@ -334,7 +339,7 @@ input {
 	color: #666666;	
 }
 .hillActive .hillWrapper {
-	background: none repeat scroll 0 0 rgba(255, 255, 255, 0.7);
+	background: none repeat scroll 0 0 rgba(255, 255, 255, 0.5);
 }
 .hillActive .hillText {
 	color: #333333;	
@@ -412,7 +417,7 @@ input {
 	float: left;
 	height: 30px;
 	width: 38px;
-	background-image: url("../images/ant-tile.jpg");
+	background: url("../images/ant-tile.png") no-repeat scroll 0 0 rgba(255, 255, 255, 0.5);
 	cursor: move;
 }
 .iconDragging {

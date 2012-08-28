@@ -18,7 +18,11 @@ var Ant = {
 			// tile backgrounds
 			tileBackgrounds: [
 				"tileMoss",
-				"tileMoss2"
+				"tileMoss2",
+				"tileMoss3",
+				"tileMoss4",
+				"tileMoss5",
+				"tileMoss6"				
 			],
 			// how many tiles to offset odd columns
 			// and how many less tiles odd columns will have
@@ -242,7 +246,7 @@ Ant.Tile.prototype.workers = function (num, player) {
 			if (this._workersTotal < 1) {
 				this.DOM.self.removeClass("tileColonized");
 				this.DOM.antsWrapper.hide();
-				this.DOM.dragWorker.hide();
+				this.DOM.dragWorker.addClass("cloak");
 				this.markActive(false);
 			} else {
 				this.DOM.self.addClass("tileColonized");
@@ -250,10 +254,10 @@ Ant.Tile.prototype.workers = function (num, player) {
 
 				// show draggable if workers exist, and player is current player, and mark active
 				if (this._ants[player].workers > 0 && player === Ant.Turn.player) {
-					this.DOM.dragWorker.show();
+					this.DOM.dragWorker.removeClass("cloak");
 					this.markActive(true);
 				} else {
-					this.DOM.dragWorker.hide();
+					this.DOM.dragWorker.addClass("cloak");
 					this.markActive(false);
 				}
 			}
@@ -645,7 +649,7 @@ Ant.Board.createTile = function (id, col) {
 							["data-id", id],
 							["data-type", "tile"],
 							["title", "Workers (drag to swarm)"],
-							["class", "iconAnt hide"]
+							["class", "iconAnt cloak"]
 						]
 					}),
 					Util.el("div", {
@@ -1448,11 +1452,11 @@ Ant.Turn.updatePlayer = function () {
 		if (Ant.Board.tiles[i].workers(null, Ant.Turn.player) > 0) {
 			Ant.Board.tiles[i].markActive(true);
 			Ant.Board.tiles[i].DOM.ants.text(Ant.Board.tiles[i].workers(null, Ant.Turn.player));
-			Ant.Board.tiles[i].DOM.dragWorker.show();
+			Ant.Board.tiles[i].DOM.dragWorker.removeClass("cloak");
 		} else {
 			Ant.Board.tiles[i].markActive(false);
 			Ant.Board.tiles[i].DOM.ants.text(0);
-			Ant.Board.tiles[i].DOM.dragWorker.hide();
+			Ant.Board.tiles[i].DOM.dragWorker.addClass("cloak");
 		}
 	}
 
