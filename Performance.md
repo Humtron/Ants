@@ -9,7 +9,7 @@ Initializing objects like Ant.Tile is 25% faster in testing when done with all f
 
 uTime = new Date();
 
-for (var i = 0; i < 100000; i++) {
+for (var i = 0; i &lt; 100000; i++) {
 	tiles.push(new Ant.Tile({ id: i, food: 25 }));
 }
 
