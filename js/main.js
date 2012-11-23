@@ -1636,7 +1636,8 @@ Ant.Turn.gameOver = function (player) {
 
 // TODO: don't allow current player to drag if no moves remaining
 // TODO: add flippable hills for more data visualization
-
+// TODO: add settable ending to a certain number of turns
+// TODO: implement basic AI
 
 
 
