@@ -1639,9 +1639,6 @@ Ant.Turn.gameOver = function (player) {
 // TODO: add settable ending to a certain number of turns
 // TODO: implement basic AI
 
-
-
-
 var Util = {
 	// improved typeof (far more specific)
 	getType: function (obj) {
@@ -1766,3 +1763,103 @@ var Util = {
 		$("div.yetiBackground").remove();
 	}
 };
+
+// experimental prototype for adding new DOM elements
+Util.el2 = function (tag, attr) {
+	var i;
+
+	// considered private properties, but must be
+	// tied to "this" context so prototype can access them
+	this._element = document.createElement(tag);
+
+// TODO: change attr to a bag of object properties
+
+	// set all attributes
+	if (attr && attr.length) {
+		for (i = 0; i < attr.length; i++) {
+			this._element.setAttribute(attr[i][0], attr[i][1]);
+		}
+	}
+	
+	// chainable
+	return this;
+};
+
+Util.el2.prototype.append = function (children) {
+	var i;
+
+// TODO: change children to endless arguments
+
+	// append all children
+	if (children && children.length) {
+		for (i = 0; i < children.length; i++) {
+			// objects are appended directly, all other types become text nodes
+			if (typeof children[i] === "object") {
+				this._element.appendChild(children[i]);
+			} else {
+				this._element.appendChild(document.createTextNode(children[i]));
+			}
+		}
+	}
+
+	// chainable
+	return this;
+};
+
+Util.el2.prototype.on = function (type, callback, data) {
+	// bind (event type, selector, event.data, function)
+	jQuery(this._element).on(type, null, data || {}, callback);
+
+	// chainable
+	return this;
+};
+
+Util.el2.prototype.render = function () {
+	return this._element;
+};
+
+/*
+// ideal
+Util.el2("span", { class: "spanLink" })
+    .on("click", function (event) { alert(event.data.foo); }, { foo: 5 })
+    .append("Stuff", "and")
+    
+// actual
+Util.el2("span", [["class", "spanLink"]])
+    .on("click", function (event) { alert(event.data.foo); }, { foo: 5 })
+    .append(["Stuff", "and"])
+    .render()
+*/
+
+/*
+// timer
+var elements = [],
+	uTime;
+
+uTime = new Date();
+
+for (var i = 0; i < 10000; i++) {
+    elements.push(
+        Util.el("span", {
+            attr: [["class", "spanLink"]],
+            events: [["click", function (event) { alert(event.data.foo); }, { foo: 5 }]],
+            children: ["Stuff (new)"]
+        })
+    );
+}
+
+console.info("Time (old): ", ((new Date()) - uTime) + "ms");
+
+uTime = new Date();
+
+for (var i = 0; i < 10000; i++) {
+    elements.push(
+        new Util.el2("span", [["class", "spanLink"]])
+            .on("click", function (event) { alert(event.data.foo); }, { foo: 5 })
+            .append(["Stuff (old)"])
+            .render()
+    );
+}
+
+console.info("Time (new): ", ((new Date()) - uTime) + "ms");
+*/
