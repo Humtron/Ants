@@ -335,33 +335,6 @@ Ant.DOM.bind = function () {
 	Ant.DOM.Tiles = $("#Tiles");
 };
 
-Ant.DOM.bindQtip = function () {
-//	var settings = {
-//		style: {
-//			name: "dark",
-//			tip: "bottomMiddle"
-//		},
-//		position: {
-//			corner: {
-//				target: "topMiddle",
-//				tooltip: "bottomMiddle"
-//			}
-//		}
-//	};
-//
-	// only make new qtips where necessary,
-	// because qtip get confused when bound more
-	// than once to an element, and $(el).qtip("destroy")
-	// will throw an error if qtip does not exist already
-//	$("div[title], input[title], li[title]").each(function () {
-//		var that = $(this);
-//
-//		if (!that.data("qtip")) {
-//			that.qtip(settings);
-//		}
-//	});
-};
-
 Ant.Board.reset = function () {
 	Ant.Turn.round = 0;
 	Ant.Turn.player = 0;
@@ -443,23 +416,20 @@ Ant.Board.promptPlayers = function (numPlayers) {
 	);
 
 	for (var i = 0; i < numPlayers; i++) {
-		$("#PlayerNames").append([
-			Util.el("label", {
-				attr: [["for", "Player" + i]],
-				children: ["Player " + (i + 1)]
-			}),
-			Util.el("input", {
-				attr: [
-					["id", "Player" + i],
-					["type", "text"],
-					["maxlength", "10"]
-				]
-			}),
-			Util.el("br")
-		]);
+		$("#PlayerNames").append(
+			new Util.el("label", { "for": "Player" + i })
+				.append("Player " + (i + 1))
+				.self(),
+			new Util.el("input", {
+					"id": "Player" + i,
+					"type": "text",
+					"maxlength": "10"
+				})
+				.append()
+				.self(),
+			new Util.el("br").self()
+		);
 	}
-
-	Ant.DOM.bindQtip();
 
 	$("#PlayerSettingsShow").click(function () {
 		$("#PlayerSettingsShow").hide();
@@ -518,99 +488,84 @@ Ant.Board.createHill = function (id) {
 		})
 	);
 
-	return Util.el("div", {
-		attr: [
-			["id", "Hill" + id],
-			["data-id", id],
-			["class", "hill"]
-		],
-		children: [
-			Util.el("div", {
-				attr: [["class", "hillText"]],
-				children: [
-					Util.el("div", {
-						attr: [["class", "hillName"]],
-						children: [Ant.Board.players[id].name]
-					}),
-					Util.el("div", {
-						attr: [["class", "hillFood"]],
-						children: [
-							Util.el("span", {
-								attr: [["class", "hillWrapper"]],
-								children: [
-									Util.el("span", {
-										attr: [["id", "Hill" + id + "Food"]],
-										children: [Ant.Settings.ants.food]
-									}),
+	return new Util.el("div", {
+			"id": "Hill" + id,
+			"data-id": id,
+			"class": "hill"
+		})
+		.append(
+			new Util.el("div", { "class": "hillText" })
+				.append(
+					new Util.el("div", { "class": "hillName" })
+						.append(Ant.Board.players[id].name)
+						.self(),
+					new Util.el("div", { "class": "hillFood" })
+						.append(
+							new Util.el("span", { "class": "hillWrapper" })
+								.append(
+									new Util.el("span", { "id": "Hill" + id + "Food" })
+										.append(Ant.Settings.ants.food)
+										.self(),
 									" ",
-									Util.el("div", {
-										attr: [
-											["title", "Cake. Delicious."],
-											["class", "iconFood"]
-										]
-									})
-								]
-							})
-						]
-					}),
-					Util.el("div", {
-						attr: [["class", "hillQueens"]],
-						children: [
-							Util.el("span", {
-								attr: [["class", "hillWrapper"]],
-								children: [
-									Util.el("span", {
-										attr: [["id", "Hill" + id + "Queens"]],
-										children: [Ant.Settings.ants.queens]
-									}),
+									new Util.el("div", {
+											"title": "Cake. Delicious.",
+											"class": "iconFood"
+										})
+										.self()
+								)
+								.self()
+						)
+						.self(),
+					new Util.el("div", { "class": "hillQueens" })
+						.append(
+							new Util.el("span", { "class": "hillWrapper" })
+								.append(
+									new Util.el("span", { "id": "Hill" + id + "Queens" })
+										.append(Ant.Settings.ants.queens)
+										.self(),
 									" ",
-									Util.el("div", {
-										attr: [
-											["title", "Queens. Precious."],
-											["class", "iconQueen"]
-										]
-									})
-								]
-							})
-						]
-					}),
-					Util.el("div", {
-						attr: [["class", "hillWorkersWrapper"]],
-						children: [
-							Util.el("div", {
-								attr: [
-									["data-id", id],
-									["data-type", "hill"],
-									["title", "Workers (drag to swarm)"],
-									["class", "hillWorkers"]
-								],
-								children: [
-									Util.el("div", {
-										attr: [["class", "hillWorkersText"]],
-										children: [
-											Util.el("span", {
-												attr: [
-													["id", "Hill" + id + "Workers"],
-													["class", "spanGray"]
-												],
-												children: [Ant.Settings.ants.workers]
-											})
-										]
-									})
-								]
-							})
-						]
-					})
-				]
-			})
-		]
-	});
+									new Util.el("div", {
+											"title": "Queens. Precious.",
+											"class": "iconQueen"
+										})
+										.self()
+								)
+								.self()
+						)
+						.self(),
+					new Util.el("div", { "class": "hillWorkersWrapper" })
+						.append(
+							new Util.el("div", {
+									"data-id": id,
+									"data-type": "hill",
+									"title": "Workers (drag to swarm)",
+									"class": "hillWorkers"
+								})
+								.append(
+									new Util.el("div", { "class": "hillWorkersText" })
+										.append(
+											new Util.el("span", {
+													"id": "Hill" + id + "Workers",
+													"class": "spanGray"
+												})
+												.append(Ant.Settings.ants.workers)
+												.self()
+										)
+										.self()
+								)
+								.self()
+						)
+						.self()
+				)
+				.self()
+		)
+		.self();
 };
 
 Ant.Board.createTile = function (id, col) {
 	// random food weighted by tile's column
 	var food = Ant.Settings.food.min + 
-		Math.floor((Math.random() * Ant.Settings.food.range) + (col * Ant.Settings.food.weight)),
+			Math.floor((Math.random() * Ant.Settings.food.range) + (col * Ant.Settings.food.weight)),
 		// random background
 		bg = Math.floor(Math.random() * Ant.Settings.board.tileBackgrounds.length);
 
@@ -625,60 +580,44 @@ Ant.Board.createTile = function (id, col) {
 		})
 	);
 
-	return Util.el("div", {
-		attr: [
-			["id", "Tile" + id],
-			["data-id", id],
-			["class", "tile " + Ant.Settings.board.tileBackgrounds[bg]]
-		],
-		children: [
-			Util.el("div", {
-				attr: [["class", "tileText"]],
-				children: [
-					Util.el("div", {
-						attr: [["class", "tileFood"]],
-						children: [
-							Util.el("span", {
-								attr: [["id", "Tile" + id + "Food"]],
-								children: [food]
-							})
-						]
-					}),
-					Util.el("div", {
-						attr: [
-							["data-id", id],
-							["data-type", "tile"],
-							["title", "Workers (drag to swarm)"],
-							["class", "iconAnt cloak"]
-						]
-					}),
-					Util.el("div", {
-						attr: [["class", "tileAnts hide"]],
-						children: [
-							Util.el("span", {
-								attr: [["id", "Tile" + id + "Ants"]],
-								children: [0]
-							}),
+	return new Util.el("div", {
+			"id": "Tile" + id,
+			"data-id": id,
+			"class": "tile " + Ant.Settings.board.tileBackgrounds[bg]
+		})
+		.append(
+			new Util.el("div", { "class": "tileText" })
+				.append(
+					new Util.el("div", { "class": "tileFood" })
+						.append(
+							new Util.el("span", { "id": "Tile" + id + "Food" })
+								.append(food)
+								.self()
+						)
+						.self(),
+					new Util.el("div", {
+							"data-id": id,
+							"data-type": "tile",
+							"title": "Workers (drag to swarm)",
+							"class": "iconAnt cloak"
+						})
+						.self(),
+					new Util.el("div", { "class": "tileAnts hide" })
+						.append(
+							new Util.el("span", { "id": "Tile" + id + "Ants" })
+								.append(0)
+								.self(),
 							" / ",
-							Util.el("span", {
-								attr: [["id", "Tile" + id + "AntsTotal"]],
-								children: [0]
-							})
-						]
-					})
-				]
-			})
-		]
-	});
+							new Util.el("span", { "id": "Tile" + id + "AntsTotal" })
+								.append(0)
+								.self()
+						)
+						.self()
+				)
+				.self()
+		)
+		.self();
 };
-
-Ant.Board.createRandomTiles = function(numTiles) {
-	// indices of tiles to hide
-	var hidden = [],
-		// distribution of hidden tiles across columns
-		dist = [],
-		ids = Ant.Board.tileColumnIDs,
-		i = 0, j = 0;
 
 /*
 For 4 random cols and N hidden tiles:
@@ -687,6 +626,13 @@ For 4 random cols and N hidden tiles:
 5: 2, 1, 1, 1
 6: 2, 2, 1, 1
 */
+Ant.Board.createRandomTiles = function(numTiles) {
+	// indices of tiles to hide
+	var hidden = [],
+		// distribution of hidden tiles across columns
+		dist = [],
+		ids = Ant.Board.tileColumnIDs,
+		i = 0, j = 0;
 
 	// fill distribution array
 	for (i = 0; i < Ant.Settings.board.tileColumns; i++) {
@@ -713,19 +659,13 @@ For 4 random cols and N hidden tiles:
 	for (i = 0; i < dist.length; i++) {
 		j = dist[i];
 
-//console.info("Allocating for col " + i + "...");
-
 		// allocate all hidden tiles for this column
 		while (j > 0) {
 			hidden.push(ids[i].first + Math.floor(Math.random() * (ids[i].last - ids[i].first)));
 
-//console.info(hidden);
-
 			j--;
 		}
 	}
-
-//console.info("Tile distribution: ", dist);
 
 	// hide any tiles in hidden array
 	for (i = 0; i < hidden.length; i++) {
@@ -771,13 +711,12 @@ Ant.Board.create = function () {
 
 		Ant.DOM.Tiles.append(
 			// create col for each set of tiles
-			Util.el("div", {
-				attr: [
-					["class", "tileCol"],
-					["style", "padding-top: " + (60 * (offset / 2)) + "px;"]
-				],
-				children: tiles
-			})
+			new Util.el("div", {
+					"class": "tileCol",
+					"style": "padding-top: " + (60 * (offset / 2)) + "px;"
+				})
+				.append(tiles)
+				.self()
 		);
 	}
 
@@ -827,8 +766,6 @@ Ant.Board.create = function () {
 	$("div.tile").click(function () {
 		Ant.Board.viewTile(this);
 	});
-
-	Ant.DOM.bindQtip();
 };
 
 Ant.Board.buyQueens = function () {
@@ -1242,43 +1179,39 @@ Ant.Board.viewTile = function (tile) {
 		// show workers and yield for each player
 		for (var i = 0; i < Ant.Board.players.length; i++) {
 			rows.push(
-				Util.el("tr", {
-					children: [
-						Util.el("td", {
-							children: [Ant.Board.players[i].name]
-						}),
-						Util.el("td", {
-							children: [
-								Util.el("span", {
-									attr: [["class", "spanYellow marginSlim"]],
-									children: [t.workers(null, i)]
-								}),
+				new Util.el("tr")
+					.append(
+						new Util.el("td")
+							.append(Ant.Board.players[i].name)
+							.self(),
+						new Util.el("td")
+							.append(
+								new Util.el("span", { "class": "spanYellow marginSlim" })
+									.append(t.workers(null, i))
+									.self(),
 								" worker" + ((t.workers(null, i) === 1) ? "" : "s") + " "
-							]
-						}),
-						Util.el("td", {
-							attr: [["class", "right"]],
-							children: [
-								Util.el("span", {
-									attr: [["class", "spanGreen marginSlim"]],
-									children: [t.yielde(i)]
-								}),
+							)
+							.self(),
+						new Util.el("td", { "class": "right" })
+							.append(
+								new Util.el("span", { "class": "spanGreen marginSlim" })
+									.append(t.yielde(i))
+									.self(),
 								" yield"
-							]
-						})
-					]
-				})
+							)
+							.self()
+					)
+					.self()
 			);
 		}
 
 		$("#PlayerDemographic").append(
-			Util.el("table", {
-				attr: [
-					["class", "rowDivider"],
-					["width", 300]
-				],
-				children: rows
-			})
+			new Util.el("table", {
+					"class": "rowDivider",
+					"width": 300
+				})
+				.append(rows)
+				.self()
 		);
 	} else {
 		$("#PlayerDemographic").html("<i>No ants have colonized this area yet.</i>");
@@ -1308,56 +1241,52 @@ Ant.Board.viewScore = function () {
 		Ant.Board.updateUpkeep(i);
 
 		rows.push(
-			Util.el("tr", {
-				children: [
-					Util.el("td", {
-						children: [player.name]
-					}),
-					Util.el("td", {
-						attr: [["class", "right"]],
-						children: [
-							Util.el("span", {
-								attr: [["class", ((player.yielde.last > 0) ? "spanGreen" : "spanRed") + " marginSlim"]],
-								children: [player.yielde.last]
-							}),
+			new Util.el("tr")
+				.append(
+					new Util.el("td")
+						.append(player.name)
+						.self(),
+					new Util.el("td", { "class": "right" })
+						.append(
+							new Util.el("span", {
+									"class": ((player.yielde.last > 0) ? "spanGreen" : "spanRed") + " marginSlim"
+								})
+								.append(player.yielde.last)
+								.self(),
 							" last yield"
-						]
-					}),
-					Util.el("td", {
-						attr: [["class", "right"]],
-						children: [
-							Util.el("span", {
-								attr: [["class", ((player.yielde.next > 0) ? "spanGreen" : "spanRed") + " marginSlim"]],
-								children: [player.yielde.next]
-							}),
+						)
+						.self(),
+					new Util.el("td", { "class": "right" })
+						.append(
+							new Util.el("span", {
+									"class": ((player.yielde.next > 0) ? "spanGreen" : "spanRed") + " marginSlim"
+								})
+								.append(player.yielde.next)
+								.self(),
 							" next yield"
-						]
-					}),
-					Util.el("td", {
-						attr: [["class", "right"]],
-						children: [
-							Util.el("span", {
-								attr: [["class", "spanRed marginSlim"]],
-								children: [player.upkeep.next]
-							}),
+						)
+						.self(),
+					new Util.el("td", { "class": "right" })
+						.append(
+							new Util.el("span", { "class": "spanRed marginSlim" })
+								.append(player.upkeep.next)
+								.self(),
 							" upkeep"
-						]
-					})
-				]
-			})
+						)
+						.self()
+				)
+				.self()
 		);
 	}
 
 	$("#PlayerDemographic").append(
-		Util.el("table", {
-			attr: [
-				["class", "rowDivider"],
-				["width", 500]
-			],
-			children: rows
-		})
+		new Util.el("table", {
+				"class": "rowDivider",
+				"width": 500
+			})
+			.append(rows)
+			.self()
 	);
-
 
 	$("#PlayerCancel").click(function () {
 		Util.yetiDelete();
@@ -1495,8 +1424,6 @@ Ant.Turn.doUpkeep = function() {
 				tile = Ant.Board.tiles[i];
 				workers = tile.workers(null, player);
 
-//console.warn("Starvation. Analyzing tile: ", i, " with workers: ", workers);
-
 				// only analyze if player has workers in this tile
 				if (workers > 0) {
 					while (deficit < 0 && workers > 0) {
@@ -1505,8 +1432,6 @@ Ant.Turn.doUpkeep = function() {
 						deficit += Ant.Settings.ants.workerUpkeep;
 						workers = tile.workers(null, player);
 						workersStarved++;
-
-//console.warn("Starvation. 1 worker starved in tile: ", i, ", and deficit is now ", deficit);
 					}
 				}
 
@@ -1521,8 +1446,6 @@ Ant.Turn.doUpkeep = function() {
 						hill.workers(hill.workers() - 1);
 						deficit += Ant.Settings.ants.workerUpkeep;
 						workersStarved++;
-
-//console.warn("Starvation. 1 worker starved in hill, and deficit is now ", deficit);
 					}
 				}
 			}
@@ -1535,13 +1458,9 @@ Ant.Turn.doUpkeep = function() {
 						hill.queens(hill.queens() - 1);
 						deficit += Ant.Settings.ants.queenUpkeep;
 						queensStarved++;
-
-//console.warn("Starvation. 1 queen starved in hill, and deficit is now ", deficit);
 					}
 				}
 			}
-
-//console.warn("Starvation complete. Workers starved: ", workersStarved, ", and queens starved: ", queensStarved);
 
 			// calculate new yield and upkeep, due to worker starvation
 			Ant.Board.updateYield(player);
@@ -1625,8 +1544,8 @@ Ant.Turn.gameOver = function (player) {
 		"<input id='PlayerSubmit' type='button' value='Rest in peace'>"
 	);
 
-	// prevent default click on yetiBackground
-	// from closing yeti: close must go through PlayerSubmit
+	// prevent default click on yetiBackground from
+	// closing yeti: close must go through PlayerSubmit
 	$("div.yetiBackground").off("click");
 
 	$("#PlayerSubmit").click(function () {
@@ -1634,78 +1553,29 @@ Ant.Turn.gameOver = function (player) {
 	});
 };
 
-// TODO: don't allow current player to drag if no moves remaining
-// TODO: add flippable hills for more data visualization
-// TODO: add settable ending to a certain number of turns
-// TODO: implement basic AI
-
 var Util = {
 	// improved typeof (far more specific)
 	getType: function (obj) {
 		return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
 	},
-	// lightweight DOM element creation
-	el: function (tag, data) {
-		var element = document.createElement(tag), eventData = {},
-			i = 0;
-
-		if (data) {
-			// set all attributes
-			if (data.attr && data.attr.length) {
-				for (i = 0; i < data.attr.length; i++) {
-					element.setAttribute(data.attr[i][0], data.attr[i][1]);
-				}
-			}
-	
-			// bind all events
-			if (data.events && data.events.length) {
-				for (i = 0; i < data.events.length; i++) {
-					// data to be passed in event.data, if data exists
-					if (data.events[i][2]) eventData = data.events[i][2];
-	
-					// bind (event type, selector, event.data, function)
-					jQuery(element).on(data.events[i][0], null, eventData, data.events[i][1]);
-				}
-			}
-	
-			// append all children
-			if (data.children && data.children.length) {
-				for (i = 0; i < data.children.length; i++) {
-					// objects are appended directly, all other types become text nodes
-					if (typeof data.children[i] == "object") {
-						element.appendChild(data.children[i]);
-					} else {
-						element.appendChild(document.createTextNode(data.children[i]));
-					}
-				}
-			}
-	
-			// inline any innerHTML
-			if (data.innerHTML) {
-				element.innerHTML = data.innerHTML;
-			}
-		}
-
-		return element;
-	},
 	// clean and return integer
 	cleanNumber: function (data) {
-		var result = data.replace(/[^0-9]/g, "");
+		var num = data.replace(/[^0-9]/g, "");
 
 		// must be numbers only
-		if (result !== "") {
-			result = parseInt(result, 10);
+		if (num !== "") {
+			num = parseInt(num, 10);
 		} else {
-			result = 0;
+			num = 0;
 		}
 
-		return result;
+		return num;
 	},
 	// add new yeti
 	yetiAdd: function (data) {
-		var yetiDiv, yetiSpan,
-			findX, findY,
-			uWidth;
+		var div, span,
+			x, y,
+			width = 570;
 
 		// delete any current yeti
 		Util.yetiDelete();
@@ -1713,49 +1583,46 @@ var Util = {
 		// set background
 		Util.yetiAddBackground();
 
-		// set defaults
-		uWidth = 570;
-
 		// create yeti element
-		yetiDiv = document.createElement("div");
-		yetiDiv.className = "yeti";
-		yetiDiv.style.width = uWidth + "px";
+		div = document.createElement("div");
+		div.className = "yeti";
+		div.style.width = width + "px";
 
-		// include CSS padding/border width from master.css!
-		findX = $(document).scrollLeft() + ($(window).width() / 2) - (uWidth / 2) - (10 / 2) - (10 / 2);
-		findY = $(document).scrollTop() + 100;
+		// include CSS padding/border width from CSS!
+		x = $(document).scrollLeft() + ($(window).width() / 2) - (width / 2) - (10 / 2) - (10 / 2);
+		y = $(document).scrollTop() + 100;
 
 		// add yeti content
-		yetiSpan = document.createElement("span");
-		yetiSpan.innerHTML = data;
-		yetiDiv.appendChild(yetiSpan);
+		span = document.createElement("span");
+		span.innerHTML = data;
+		div.appendChild(span);
 
 		// position yeti
-		yetiDiv.style.position = "absolute";
-		yetiDiv.style.left = Math.round(findX) + "px";
-		yetiDiv.style.top = Math.round(findY) + "px";
+		div.style.position = "absolute";
+		div.style.left = Math.round(x) + "px";
+		div.style.top = Math.round(y) + "px";
 
 		// add yeti to page
-		$("body").append(yetiDiv);
+		$("body").append(div);
 	},
 	// add yeti background
 	yetiAddBackground: function () {
 		// create yeti background element
-		var yetiDiv = document.createElement("div");
-		yetiDiv.className = "yetiBackground";
+		var div = document.createElement("div");
+		div.className = "yetiBackground";
 
 		// position yeti background
-		yetiDiv.style.position = "fixed";
-		yetiDiv.style.left = "0px";
-		yetiDiv.style.top = "0px";
+		div.style.position = "fixed";
+		div.style.left = "0px";
+		div.style.top = "0px";
 
-		$(yetiDiv).click(function () {
+		$(div).click(function () {
 			// delete any current yeti
 			Util.yetiDelete();			
 		});
 
 		// add yeti background to page
-		$("body").append(yetiDiv);
+		$("body").append(div);
 	},
 	// delete all yeti
 	yetiDelete: function () {
@@ -1764,41 +1631,46 @@ var Util = {
 	}
 };
 
-// experimental prototype for adding new DOM elements
-Util.el2 = function (tag, attr) {
-	var i;
+// lightweight object for adding new DOM elements
+Util.el = function (tag, attr) {
+	var name;
 
-	// considered private properties, but must be
-	// tied to "this" context so prototype can access them
+	// considered private, but must be tied to "this" context 
+	// so prototype can access them
 	this._element = document.createElement(tag);
-
-// TODO: change attr to a bag of object properties
+	this._append = function (node) {
+		// objects are appended directly, all other types become text nodes
+		if (typeof node === "object") {
+			this._element.appendChild(node);
+		} else {
+			this._element.appendChild(document.createTextNode(node));
+		}
+	};
 
 	// set all attributes
-	if (attr && attr.length) {
-		for (i = 0; i < attr.length; i++) {
-			this._element.setAttribute(attr[i][0], attr[i][1]);
+	if (attr) {
+		// set each attr name and value
+		for (name in attr) {
+			this._element.setAttribute(name, attr[name]);
 		}
 	}
-	
+
 	// chainable
 	return this;
 };
 
-Util.el2.prototype.append = function (children) {
-	var i;
+Util.el.prototype.append = function () {
+	var i, j;
 
-// TODO: change children to endless arguments
-
-	// append all children
-	if (children && children.length) {
-		for (i = 0; i < children.length; i++) {
-			// objects are appended directly, all other types become text nodes
-			if (typeof children[i] === "object") {
-				this._element.appendChild(children[i]);
-			} else {
-				this._element.appendChild(document.createTextNode(children[i]));
+	// append all arguments as nodes
+	for (i = 0; i < arguments.length; i++) {
+		if (Util.getType(arguments[i]) === "array") {
+			// append each array node
+			for (j = 0; j < arguments[i].length; j++) {
+				this._append(arguments[i][j]);
 			}
+		} else {
+			this._append(arguments[i]);
 		}
 	}
 
@@ -1806,60 +1678,23 @@ Util.el2.prototype.append = function (children) {
 	return this;
 };
 
-Util.el2.prototype.on = function (type, callback, data) {
-	// bind (event type, selector, event.data, function)
-	jQuery(this._element).on(type, null, data || {}, callback);
+Util.el.prototype.html = function (html) {
+	// insert text as HTML
+	$(this._element).html(html);
 
 	// chainable
 	return this;
 };
 
-Util.el2.prototype.render = function () {
+Util.el.prototype.on = function (type, callback, data, selector) {
+	// bind (event type, selector, event.data, function)
+	$(this._element).on(type, selector || null, data || {}, callback);
+
+	// chainable
+	return this;
+};
+
+Util.el.prototype.self = function () {
+	// native DOM element
 	return this._element;
 };
-
-/*
-// ideal
-Util.el2("span", { class: "spanLink" })
-    .on("click", function (event) { alert(event.data.foo); }, { foo: 5 })
-    .append("Stuff", "and")
-    
-// actual
-Util.el2("span", [["class", "spanLink"]])
-    .on("click", function (event) { alert(event.data.foo); }, { foo: 5 })
-    .append(["Stuff", "and"])
-    .render()
-*/
-
-/*
-// timer
-var elements = [],
-	uTime;
-
-uTime = new Date();
-
-for (var i = 0; i < 10000; i++) {
-    elements.push(
-        Util.el("span", {
-            attr: [["class", "spanLink"]],
-            events: [["click", function (event) { alert(event.data.foo); }, { foo: 5 }]],
-            children: ["Stuff (new)"]
-        })
-    );
-}
-
-console.info("Time (old): ", ((new Date()) - uTime) + "ms");
-
-uTime = new Date();
-
-for (var i = 0; i < 10000; i++) {
-    elements.push(
-        new Util.el2("span", [["class", "spanLink"]])
-            .on("click", function (event) { alert(event.data.foo); }, { foo: 5 })
-            .append(["Stuff (old)"])
-            .render()
-    );
-}
-
-console.info("Time (new): ", ((new Date()) - uTime) + "ms");
-*/
