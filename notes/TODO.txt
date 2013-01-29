@@ -1,13 +1,7 @@
 TODO:
 
-Move food in tile to upper right as an overlay
-Remove ant icon from tiles
-Make huge worker icon in tile as draggable (and use class swap)
-Show fractional values on tiles for active player (1/3 meaning player has 1 ant, out of 3 on tile)
-
 Only allow workers to move into tile if workers exceed other ants in tile...
 	If player moves 3 workers into tile with 4 other ants already, no move is possible
 	If player moves 5 workers into tile with 4 other ants, move occurs, and yield is split proportionally
-	... this allows chokepoints, and encourages ant swarms
+	... this allows choke points, and encourages ant swarms
 
-Make board round. South tiles can move onto north tiles, and vice versa.
