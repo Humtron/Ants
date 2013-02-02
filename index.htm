@@ -1,45 +1,86 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>The M Project</title>
+	<title>Prototype</title>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
 	<meta name="viewport" content="width=610">
 	<link type="image/icon" rel="shortcut icon" href="favicon.ico" />
-	<link type="text/css" rel="stylesheet" href="css/main.css?v=1" />
+	<link type="text/css" rel="stylesheet" href="libs/theme/sunny/jquery-ui-1.8.22.custom.css" />
+	<link type="text/css" rel="stylesheet" href="css/main.css?v=4" />
+	<script type="text/javascript" src="libs/js/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="libs/js/jquery-ui-1.8.22.custom.min.js"></script>
+	<script type="text/javascript" src="libs/js/jquery.ui.touch-punch.min.js"></script>
+	<script type="text/javascript" src="js/main.js?v=3"></script>
 </head>
 <body>
 	<div id="container">
 		<div id="Meta" style="float:right">
 			<span id="ThemeLight" class="spanLink hide">Light</span>
 			<span id="ThemeDark" class="spanLink">Dark</span>
+			&nbsp;&nbsp;&mdash;&nbsp;&nbsp;
+			<span id="Score" class="spanLink">Scoreboard</span>
 		</div>
 
-		<h1>The M Project</h1>
+		<h1>Go east, young ant</h1>
 
-		<div id="Controller">
-			<div class="controllerBox" title="">
-				<input id='BrainThoughts' type='text' size='5' value='3'> 
-				thoughts: 
-				<input id="BrainThink" type="button" title="" value="Think">
+		<div id="Turn">
+			<!--<div class="turnBox" title="The current player"><span id="Player" class="marginSlim">Nobody</span> &mdash;</div>-->
+			<div class="turnBox" title="Moves left this turn">
+				<span id="Moves" class="spanGrayLight marginSlim">0</span> 
+				<span id="MovesPlural">moves</span>
 			</div>
-			<div class="controllerBoxRight">
-				DOM: 
-				<input id="Start" type="button" title="" value="Start"> 
-				<input id="Stop" type="button" title="" value="Stop" class="hide"> 
-				<input id="Clear" type="button" title="" value="Clear"> 
+			<div class="turnBox" title="Next yield for this player"><span id="Yielde" class="spanRed marginSlim">0</span> yield</div>
+			<div class="turnBox" title="Upkeep cost for this player"><span id="Upkeep" class="spanRed marginSlim">0</span> upkeep</div>
+			<div class="turnBoxRight">
+				<input id="BuyQueens" type="button" title="Hatch more queens" value="Queens++"> 
+				<input id="BuyWorkers" type="button" title="Hatch more workers" value="Workers++"> 
+				<input id="NextPlayer" type="button" title="End turn" value="End">
 			</div>
 		</div>
 
-		<div id="Biome"></div>
+		<div id="Board">
+			<div id="Hills"></div>
+			<div id="Tiles"></div>
+		</div>
+
+		<div id="NewGame">
+			<input id="NewGameSubmit" type="button" value="Create new game"> with 
+			<div id="NewPlayers"></div> 
+			players
+		</div>
 	</div>
 
-	<script type="text/javascript" src="js/require-jquery.js?v=1" data-main="js/main"></script>
 	<script type="text/javascript">
+	<!--
 
 	// helps debug JS
 	"use strict";
 
 	$(document).ready(function () {
+		// bind DOM controls
+		Ant.DOM.bind();
+		
+		// attach events
+		$("#NewGameSubmit").click(function() {
+			$("#NewGame").css("opacity", "0.3").hover(function () {
+				$(this).css("opacity", "1");
+			}, function () {
+				$(this).css("opacity", "0.05");
+			});
+			Ant.Board.reset();
+			Ant.Board.promptPlayers($("#NewPlayers").slider("value"));
+		});
+		$("#NewPlayers").slider({
+			value: 3,
+			min: 2,
+			max: 5,
+			step: 1,
+			slide: function (event, ui) {
+				// update handle
+				$("a.ui-slider-handle").text(ui.value);
+			}
+		});
 		$("#ThemeLight").click(function() {
 			$("body").removeClass("dark");
 			$("#ThemeLight").hide();
@@ -50,8 +91,25 @@
 			$("#ThemeLight").show();
 			$("#ThemeDark").hide();
 		});
+		$("#Score").click(function() {
+			Ant.Board.viewScore();
+		});
+		$("#BuyQueens").click(function() {
+			Ant.Board.buyQueens();
+		});
+		$("#BuyWorkers").click(function() {
+			Ant.Board.buyWorkers();
+		});
+		$("#NextPlayer").click(function() {
+			Ant.Turn.nextPlayer();
+		});
+		
+		// default new players
+		$("#NewPlayers a.ui-slider-handle").text(3);
 	});
 
-	</script>
+	//-->
+	</script> 
+
 </body>
 </html>

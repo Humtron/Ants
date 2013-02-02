@@ -1,4 +1,7 @@
 TODO:
 
-Lots and lots and lots.
+Only allow workers to move into tile if workers exceed other ants in tile...
+	If player moves 3 workers into tile with 4 other ants already, no move is possible
+	If player moves 5 workers into tile with 4 other ants, move occurs, and yield is split proportionally
+	... this allows choke points, and encourages ant swarms
 
